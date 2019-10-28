@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -9,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RobotMap {
     public static DcMotor lfDrive, lmDrive, lbDrive, rfDrive, rmDrive, rbDrive;
+    public static DcMotor lGripper, rGripper;
+    public static CRServo lClaw, rClaw;
     public static Telemetry telemetry;
     public static Gamepad g1, g2;
 
@@ -21,6 +24,13 @@ public class RobotMap {
         rfDrive = hw.get(DcMotor.class, "RFDrive");
         rmDrive = hw.get(DcMotor.class, "RMDrive");
         rbDrive = hw.get(DcMotor.class, "RBDrive");
+
+        lGripper = hw.get(DcMotor.class, "LGripper");
+        rGripper = hw.get(DcMotor.class, "RGripper");
+
+
+        lClaw = hw.get(CRServo.class, "LClaw");
+        rClaw = hw.get(CRServo.class, "RClaw");
 
         telemetry = t;
 

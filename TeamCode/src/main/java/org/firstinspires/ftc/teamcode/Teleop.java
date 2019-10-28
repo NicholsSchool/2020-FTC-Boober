@@ -19,7 +19,8 @@ public class Teleop extends OpMode
     public void loop() {
 
         Robot.driveTrain.move(RobotMap.g1.left_stick_y, RobotMap.g1.right_stick_y);
-        Robot.driveTrain.encoderTest();
+        RobotMap.lGripper.setPower(0.5);
+
     }
 
     @Override
