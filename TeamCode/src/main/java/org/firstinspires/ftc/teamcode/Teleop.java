@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -19,7 +18,20 @@ public class Teleop extends OpMode
     public void loop() {
 
         Robot.driveTrain.move(RobotMap.g1.left_stick_y, RobotMap.g1.right_stick_y);
-        RobotMap.lGripper.setPower(0.5);
+
+        if(RobotMap.g1.right_bumper)
+            Robot.intake.intake();
+        else if(RobotMap.g1.left_bumper)
+            Robot.intake.outtake();
+        else
+            Robot.intake.stopTurn();
+
+        if(RobotMap.g1.a)
+            Robot.intake.up();
+        else if(RobotMap.g1.y)
+            Robot.intake.down();
+        else
+            Robot.intake.stopLift();
 
     }
 
