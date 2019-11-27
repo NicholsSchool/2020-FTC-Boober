@@ -1,42 +1,43 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
+import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
+
 
 @TeleOp(name="BooberTeleop", group="Iterative Opmode")
 public class Teleop extends OpMode
 {
     @Override
     public void init() {
-        Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
+        Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2);
     }
 
     @Override
     public void loop() {
+        Robot.run();
+//        colorSensorData(RobotMap.lColorSensor, "left");
+//        colorSensorData(RobotMap.rColorSensor, "right");
+        RobotMap.telemetry.update();
+    }
 
-        Robot.driveTrain.move(RobotMap.g1.left_stick_y, RobotMap.g1.right_stick_y);
-
-        if(RobotMap.g1.right_bumper)
-            Robot.intake.intake();
-        else if(RobotMap.g1.left_bumper)
-            Robot.intake.outtake();
-        else
-            Robot.intake.stopTurn();
-
-        if(RobotMap.g1.a)
-            Robot.intake.up();
-        else if(RobotMap.g1.y)
-            Robot.intake.down();
-        else
-            Robot.intake.stopLift();
-
+    private void colorSensorData(ColorSensor sensor, String type)
+    {
+        RobotMap.telemetry.addData(type + "sensor blue",sensor.blue());
+        RobotMap.telemetry.addData(type + "sensor green",sensor.green());
+        RobotMap.telemetry.addData(type + "sensor red",sensor.red());
+        RobotMap.telemetry.addData(type + "sensor alpha",sensor.alpha());
+        RobotMap.telemetry.addData(type + "sensor alpha",sensor.argb());
     }
 
     @Override
     public void stop() {
-        Robot.driveTrain.stop();
+        Robot.stop();
     }
 }

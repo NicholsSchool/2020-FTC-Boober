@@ -1,54 +1,60 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.teamcode.util.Constants;
+import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 
-public class Intake {
+public class Intake extends Subsystem{
 
-    private void turn(double speed)
+    public Intake(String name)
+    {
+        super(name);
+    }
+
+    private void move(double speed)
     {
         RobotMap.lGripper.setPower(speed);
         RobotMap.rGripper.setPower(speed);
     }
 
-    public void intake()
+    public void slowIntake()
     {
-        turn(1.0);
+            move(Constants.SLOW_INTAKE_SPEED);
     }
 
-    public void outtake()
+    public void fastIntake()
     {
-        turn(-1.0);
+        move(Constants.FAST_INTAKE_SPEED);
     }
 
-    private void lift(double speed)
+    public void fastOuttake()
     {
-        RobotMap.lClaw.setPower(speed);
-        RobotMap.rClaw.setPower(speed);
+        move(Constants.FAST_OUTTAKE_SPEED);
     }
 
-    public void up()
+    public void slowOuttake()
     {
-        lift(1.0);
+        move(Constants.SLOW_OUTTAKE_SPEED);
     }
 
-    public void down()
+    @Override
+    public void run()
     {
-        lift(-1.0);
+        if(RobotMap.g1.right_bumper)
+            slowIntake();
+        else if (RobotMap.g1.right_trigger>0.5)
+            fastIntake();
+        else if(RobotMap.g1.left_bumper)
+            fastOuttake();
+        else if (RobotMap.g1.left_trigger>0.5)
+            slowOuttake();
+        else
+            stop();
     }
 
-    public void stopLift()
-    {
-        lift(0);
-    }
-
-    public void stopTurn()
-    {
-        turn(0);
-    }
-
+    @Override
     public void stop()
     {
-        stopLift();
-        stopTurn();
+       move(0);
     }
 }
