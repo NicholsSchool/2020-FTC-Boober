@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
@@ -15,7 +16,8 @@ public class DriveTrain extends Subsystem implements Recordable {
 
     private static final double
             COUNTS_PER_REV  = -530, INCHES_PER_REV = 4 * Math.PI, COUNTS_PER_INCH = COUNTS_PER_REV/INCHES_PER_REV;
-    DcMotorSimple[] motors;
+    private DcMotorSimple[] motors;
+    private boolean isArcadeDrive;
     public DriveTrain(String name)
     {
         super(name);
@@ -26,12 +28,18 @@ public class DriveTrain extends Subsystem implements Recordable {
         motors[3] = RobotMap.rfDrive;
         motors[4] = RobotMap.rmDrive;
         motors[5] = RobotMap.rbDrive;
+        isArcadeDrive = false;
     }
 
     public void move(double lSpeed, double rSpeed)
     {
+        lSpeed = Range.clip(lSpeed, -1, 1);
+        rSpeed = Range.clip(lSpeed, -1, 1);
+
+        // The x^2 movement Dillan wanted.
         lSpeed *= Math.abs(lSpeed);
         rSpeed *= Math.abs(rSpeed);
+
         lSpeed *= Constants.DRIVE_BUFFER;
         rSpeed *= Constants.DRIVE_BUFFER;
 
@@ -42,6 +50,16 @@ public class DriveTrain extends Subsystem implements Recordable {
                motors[i].setPower(rSpeed);
 
 
+    }
+
+    public void tankDrive()
+    {
+        move(RobotMap.g1.left_stick_y, RobotMap.g1.right_stick_y);
+    }
+
+    public void arcadeDrive()
+    {
+        move( RobotMap.g1.right_stick_x - RobotMap.g1.right_stick_y, RobotMap.g1.right_stick_x + RobotMap.g1.right_stick_y);
     }
 
     public void encoderTest()
@@ -154,10 +172,16 @@ public class DriveTrain extends Subsystem implements Recordable {
 
     public void run()
     {
-            move(RobotMap.g1.left_stick_y, RobotMap.g1.right_stick_y);
 
+        if(isArcadeDrive)
+            arcadeDrive();
+        else
+            tankDrive();
 
-        RobotMap.telemetry.addData("Run Mode", RobotMap.rmDrive.getMode());
+        if(RobotMap.g1.dpad_up)
+            isArcadeDrive = false;
+        else if(RobotMap.g1.dpad_down)
+            isArcadeDrive = true;
 /*        encoderTest();
         if(RobotMap.g1.dpad_left)
             resetEncoders();*/
