@@ -66,5 +66,7 @@ public class RobotMap {
         rmDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rbDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        claw.setDirection(DcMotorSimple.Direction.REVERSE);
+
     }
 }
