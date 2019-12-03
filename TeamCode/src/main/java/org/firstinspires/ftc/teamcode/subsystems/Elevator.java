@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import org.firstinspires.ftc.teamcode.util.RobotMap;
+import org.firstinspires.ftc.teamcode.util.record.Recordable;
 
-public class Elevator extends  Subsystem{
+public class Elevator extends Subsystem implements Recordable {
 
     public Elevator(String name)
     {
@@ -41,4 +42,13 @@ public class Elevator extends  Subsystem{
         move(0);
     }
 
+    @Override
+    public double[] getValues() {
+        return new double[]{RobotMap.elevator.getPower()};
+    }
+
+    @Override
+    public void setValues(double[] vals) {
+       move(vals[0]);
+    }
 }

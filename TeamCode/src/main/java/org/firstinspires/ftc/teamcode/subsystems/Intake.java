@@ -3,8 +3,9 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
+import org.firstinspires.ftc.teamcode.util.record.Recordable;
 
-public class Intake extends Subsystem{
+public class Intake extends Subsystem implements Recordable {
 
     public Intake(String name)
     {
@@ -56,5 +57,16 @@ public class Intake extends Subsystem{
     public void stop()
     {
        move(0);
+    }
+
+    @Override
+    public double[] getValues() {
+        return new double[]{RobotMap.lGripper.getPower(), RobotMap.rGripper.getPower()};
+    }
+
+    @Override
+    public void setValues(double[] vals) {
+        RobotMap.lGripper.setPower(vals[0]);
+        RobotMap.lGripper.setPower(vals[1]);
     }
 }

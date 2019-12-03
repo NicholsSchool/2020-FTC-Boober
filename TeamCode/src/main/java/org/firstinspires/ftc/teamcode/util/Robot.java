@@ -22,6 +22,7 @@ public class Robot {
     public static Camera camera;
     public static LinearOpMode opMode;
     public static String filePath;
+    public static String fileName;
 
     private static HashMap<String, Subsystem> subsystems;
 
@@ -34,6 +35,7 @@ public class Robot {
         claw = new Claw("Claw");
         camera = new Camera();
         filePath = Environment.getExternalStorageDirectory().getPath();
+        fileName = "BooberReplayTest.txt";
     }
 
     public static void init(HardwareMap hw, Telemetry t, Gamepad g1, Gamepad g2, LinearOpMode mode)
@@ -50,7 +52,7 @@ public class Robot {
         subsystems.put(s.getName(), s);
     }
 
-    public HashMap<String, Subsystem> getSubsystems()
+    public static HashMap<String, Subsystem> getSubsystems()
     {
         return subsystems;
     }
