@@ -89,6 +89,7 @@ public class DriveTrain extends Subsystem implements Recordable {
             DcMotor m = (DcMotor) entry.motor;
             m.setTargetPosition(m.getCurrentPosition() + (int)((entry.isLeft ? leftInches : rightInches) * COUNTS_PER_INCH));
             m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            m.setPower(Math.abs(speed));
         }
     }
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import org.firstinspires.ftc.teamcode.util.Robot;
+import org.firstinspires.ftc.teamcode.util.RobotMap;
 import org.firstinspires.ftc.teamcode.util.commandstructure.Command;
 
 public class EncoderDrive extends Command {
@@ -19,12 +20,12 @@ public class EncoderDrive extends Command {
     }
 
     @Override
-    public void execute() {
-        Robot.driveTrain.move(speed, speed);
+    public void execute(){
     }
 
     @Override
     public boolean isFinished() {
+        RobotMap.telemetry.addLine("Not Done");
         boolean[] busyMotors = Robot.driveTrain.areMotorsBusy();
         return busyMotors[0] || busyMotors[1];
     }

@@ -17,24 +17,34 @@ public class Intake extends Subsystem{
         RobotMap.rGripper.setPower(speed);
     }
 
+    public void intake(double speed)
+    {
+        move(Math.abs(speed));
+    }
+
+    public void outtake(double speed)
+    {
+        move(-Math.abs(speed));
+    }
+
     public void slowIntake()
     {
-            move(Constants.SLOW_INTAKE_SPEED);
+        intake(Constants.SLOW_INTAKE_SPEED);
     }
 
     public void fastIntake()
     {
-        move(Constants.FAST_INTAKE_SPEED);
+        intake(Constants.FAST_INTAKE_SPEED);
     }
 
     public void fastOuttake()
     {
-        move(Constants.FAST_OUTTAKE_SPEED);
+        outtake(Constants.FAST_OUTTAKE_SPEED);
     }
 
     public void slowOuttake()
     {
-        move(Constants.SLOW_OUTTAKE_SPEED);
+        outtake(Constants.SLOW_OUTTAKE_SPEED);
     }
 
     @Override

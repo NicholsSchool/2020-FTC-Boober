@@ -83,8 +83,8 @@ public class CommandGroup {
         private final Command command;
         CommandEntry(Command c, int type)
         {
-        this.type = type;
-        this.command = c;
+            this.type = type;
+            this.command = c;
         }
     }
 }
