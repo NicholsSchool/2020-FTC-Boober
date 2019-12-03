@@ -236,11 +236,15 @@ public class DriveTrain extends Subsystem implements Recordable {
 
     @Override
     public double[] getValues() {
-        return new double[]{};
+        double[] values = new double[motors.length];
+        for(int i = 0; i < motors.length; i ++)
+            values[i] = motors[i].getPower();
+        return values;
     }
 
     @Override
     public void setValues(double[] vals) {
-
+        for(int i = 0; i < vals.length; i ++)
+            motors[i].setPower(vals[i]);
     }
 }
