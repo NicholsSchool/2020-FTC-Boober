@@ -27,9 +27,9 @@ public class Elevator extends  Subsystem{
     @Override
     public void run()
     {
-        if(RobotMap.g1.y)
+        if(RobotMap.g2.y)
             up();
-        else if(RobotMap.g1.a)
+        else if(RobotMap.g2.a)
             down();
         else
             stop();

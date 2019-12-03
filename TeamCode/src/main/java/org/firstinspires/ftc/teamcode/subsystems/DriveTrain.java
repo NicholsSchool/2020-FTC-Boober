@@ -44,7 +44,7 @@ public class DriveTrain extends Subsystem implements Recordable {
     public void move(double lSpeed, double rSpeed)
     {
         lSpeed = Range.clip(lSpeed, -1, 1);
-        rSpeed = Range.clip(lSpeed, -1, 1);
+        rSpeed = Range.clip(rSpeed, -1, 1);
 
         // The x^2 movement Dillan wanted.
         lSpeed *= Math.abs(lSpeed);
@@ -68,7 +68,7 @@ public class DriveTrain extends Subsystem implements Recordable {
 
     public void arcadeDrive()
     {
-        move( RobotMap.g1.right_stick_x - RobotMap.g1.right_stick_y, RobotMap.g1.right_stick_x + RobotMap.g1.right_stick_y);
+        move( RobotMap.g1.right_stick_y - RobotMap.g1.left_stick_x, RobotMap.g1.right_stick_y + RobotMap.g1.left_stick_x);
     }
 
     public void encoderTest()

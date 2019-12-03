@@ -40,14 +40,14 @@ public class Intake extends Subsystem{
     @Override
     public void run()
     {
-        if(RobotMap.g1.right_bumper)
+        if(RobotMap.g2.right_bumper)
             slowIntake();
-        else if (RobotMap.g1.right_trigger>0.5)
+        else if (RobotMap.g2.right_trigger>0.5)
             fastIntake();
-        else if(RobotMap.g1.left_bumper)
-            fastOuttake();
-        else if (RobotMap.g1.left_trigger>0.5)
+        else if(RobotMap.g2.left_bumper)
             slowOuttake();
+        else if (RobotMap.g2.left_trigger>0.5)
+            fastOuttake();
         else
             stop();
     }
