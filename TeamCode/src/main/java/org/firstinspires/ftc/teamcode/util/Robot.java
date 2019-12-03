@@ -35,7 +35,7 @@ public class Robot {
         claw = new Claw("Claw");
         camera = new Camera();
         filePath = Environment.getExternalStorageDirectory().getPath();
-        fileName = "BooberReplayTest.txt";
+        fileName = "SimpleBuildSide";
     }
 
     public static void init(HardwareMap hw, Telemetry t, Gamepad g1, Gamepad g2, LinearOpMode mode)

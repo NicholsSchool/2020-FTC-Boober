@@ -37,7 +37,8 @@ public class Replay extends OpMode {
     @Override
     public void stop()
     {
-        reader.stop();
+        if(reader != null)
+            reader.stop();
         Robot.stop();
     }
 }

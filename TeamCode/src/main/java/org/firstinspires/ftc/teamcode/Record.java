@@ -37,11 +37,11 @@ public class Record extends OpMode {
     public void loop() {
         Robot.run();
         //Click Dpad down to begin recording
-        if (gamepad1.dpad_down)
+        if (gamepad1.dpad_right)
             isRecording = true;
 
         //Click Dpad up to stop recording
-        if (gamepad1.dpad_up) {
+        if (gamepad1.dpad_left) {
             if(isRecording)
                 try {
                     recorder.stopRecording();
@@ -57,7 +57,7 @@ public class Record extends OpMode {
         {
             try {
                 recorder.record();
-                sleep(50);
+                sleep(35);
             } catch (IOException e) {
                 telemetry.addData("Recording IO error", e);
 
@@ -82,7 +82,7 @@ public class Record extends OpMode {
     @Override
     public void stop() {
         Robot.stop();
-        if(!recorder.isWriterClosed())
+        if(recorder != null && !recorder.isWriterClosed())
         {
             try {
                 recorder.stopRecording();
