@@ -17,14 +17,19 @@ public class Teleop extends OpMode
     @Override
     public void init() {
         Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2);
+
     }
 
     @Override
     public void loop() {
         Robot.run();
+        if(RobotMap.g1.y) {
+            Robot.camera.testDetector();
+            RobotMap.telemetry.update();
+        }
 //        colorSensorData(RobotMap.lColorSensor, "left");
 //        colorSensorData(RobotMap.rColorSensor, "right");
-        RobotMap.telemetry.update();
+
     }
 
     private void colorSensorData(ColorSensor sensor, String type)

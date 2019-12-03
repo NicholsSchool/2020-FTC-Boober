@@ -54,31 +54,24 @@ public class Camera {
 
     }
 
-    public void test()
+
+    public int testDetector()
     {
-        skystoneDetector.test();
+        SkystoneDetector.SkystonePosition position =  skystoneDetector.getSkystonePosition(true, false, SkystoneDetector.RobotPosition.BLUE_POSITION1);
+        RobotMap.telemetry.addData("Position ", position);
+        switch(position)
+        {
+            case LEFT:
+                return 3;
+            case CENTER:
+                return 2;
+            case RIGHT:
+                return 1;
+            default:
+                return 1;
+        }
+
     }
-
-
-//    public int testDetector()
-//    {
-//        SkystoneDetector.SkystonePosition position =  skystoneDetector.getSkystonePosition(true, false, SkystoneDetector.RobotPosition.POSITION1);
-//        RobotMap.telemetry.addData("Position ", position);
-//        RobotMap.telemetry.update();
-//        Robot.speaker.speak(""+position);
-//        switch(position)
-//        {
-//            case LEFT:
-//                return 3;
-//            case CENTER:
-//                return 2;
-//            case RIGHT:
-//                return 1;
-//            default:
-//                return 1;
-//        }
-//
-//    }
 
 
     /**

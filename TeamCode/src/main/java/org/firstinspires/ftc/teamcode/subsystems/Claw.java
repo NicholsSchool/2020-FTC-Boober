@@ -30,9 +30,9 @@ public class Claw extends Subsystem implements Recordable {
     @Override
     public void run()
     {
-        if(RobotMap.g1.dpad_up )
+        if(RobotMap.g2.dpad_up )
             up();
-        else if(RobotMap.g1.dpad_down)
+        else if(RobotMap.g2.dpad_down)
             down();
         else
             stop();
