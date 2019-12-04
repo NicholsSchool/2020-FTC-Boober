@@ -23,6 +23,8 @@ public abstract class Command {
       }
      */
 
+    public String name = "";
+
     private boolean isInitialized = false;
 
     public abstract void initialize();
@@ -34,7 +36,7 @@ public abstract class Command {
     public abstract void end();
 
     public boolean run(){
-        if(isInitialized) {
+        if(!isInitialized) {
             initialize();
             isInitialized = true;
         }

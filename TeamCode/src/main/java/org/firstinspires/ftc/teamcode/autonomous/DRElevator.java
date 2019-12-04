@@ -3,16 +3,17 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.commandstructure.Command;
 
-public class DRIntake extends Command {
-
-    private double speed, time;
+public class DRElevator extends Command {
+    private boolean goUp;
+    private double time;
     private long startTime;
-    public DRIntake(double speed, double time)
+    public DRElevator(double time, boolean goUp)
     {
-        this.speed = speed;
         this.time = time * 1000;
-        name = "intake";
+        this.goUp = goUp;
+        name = "elevator";
     }
+
 
     @Override
     public void initialize() {
@@ -21,17 +22,19 @@ public class DRIntake extends Command {
 
     @Override
     public void execute() {
-        Robot.intake.intake(speed);
+        if(goUp)
+            Robot.elevator.up();
+        else
+            Robot.elevator.down();
     }
 
     @Override
     public boolean isFinished() {
-        System.out.println(System.currentTimeMillis() - startTime);
         return System.currentTimeMillis() - startTime > time;
     }
 
     @Override
     public void end() {
-        Robot.intake.stop();
+        Robot.elevator.stop();
     }
 }

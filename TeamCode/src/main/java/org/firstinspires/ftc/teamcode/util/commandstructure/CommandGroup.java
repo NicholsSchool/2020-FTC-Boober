@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.commandstructure;
 
+import org.firstinspires.ftc.teamcode.util.RobotMap;
+
 import java.util.ArrayList;
 
 public class CommandGroup {
@@ -28,6 +30,14 @@ public class CommandGroup {
         commands.add(new CommandEntry(command, CommandEntry.PARALLEL));
     }
 
+    public void testPrint(){
+        for(int i = 0; i < commands.size(); i ++ )
+        {
+            CommandEntry c = commands.get(i);
+            System.out.println("Command " + c.command.name + " of type " +   c.type  + " at " + i);
+        }
+    }
+
     private boolean checkedAllCommands()
     {
         return  command_index >= commands.size();
@@ -35,13 +45,13 @@ public class CommandGroup {
 
     public void run()
     {
-        if(checkedAllCommands() )
+        if(checkedAllCommands() && !parallelGroupRunning )
             return;
 
         // Get a command from the list if currently don't have one to run
-        if(currentCommand == null) {
+        if(currentCommand == null)
             currentCommand = commands.get(command_index ++);
-        }
+
 
         //If the parallel group is not running and the command is sequential run this until
         // the run() is true, then end it and remove command
@@ -57,10 +67,12 @@ public class CommandGroup {
         {
             //If the group is empty and the code reaches this point, the current command has to be
             // parallel, so keep adding parallel commands in the list until you reach a sequential or end of list
-            if(parallelGroup == null || parallelGroup.size() == 0)
-                while(currentCommand.type == CommandEntry.PARALLEL && !checkedAllCommands())
+            if(parallelGroup.size() == 0)
+                while(currentCommand.type == CommandEntry.PARALLEL)
                 {
                     parallelGroup.add(currentCommand);
+                    if(command_index == commands.size())
+                        break;
                     currentCommand = commands.get(command_index ++);
                 }
 

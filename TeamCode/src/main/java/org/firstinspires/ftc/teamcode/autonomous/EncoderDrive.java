@@ -27,7 +27,7 @@ public class EncoderDrive extends Command {
     public boolean isFinished() {
         RobotMap.telemetry.addLine("Not Done");
         boolean[] busyMotors = Robot.driveTrain.areMotorsBusy();
-        return busyMotors[0] || busyMotors[1];
+        return !busyMotors[0] && !busyMotors[1]; //This is finished when both sides are not busy
     }
 
     @Override
