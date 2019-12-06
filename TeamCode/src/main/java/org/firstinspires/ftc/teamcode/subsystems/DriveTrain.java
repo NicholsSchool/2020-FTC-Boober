@@ -193,11 +193,13 @@ public class DriveTrain extends Subsystem implements Recordable {
                         continue;
                 }
                 DcMotor m = (DcMotor) motors[i];
-
-                average +=  Math.abs(m.getCurrentPosition() - targets[count ++]);
+                average +=  targets[count ++] - m.getCurrentPosition();
             }
             System.out.println(average/(double)count);
-            prettyMuchThere = average/(double)count < error;
+            if(speed > 0)
+                prettyMuchThere = average/(double)count < error;
+            else
+                prettyMuchThere = average/(double)count > -error;
             RobotMap.telemetry.update();
 
         }

@@ -49,6 +49,19 @@ public class Elevator extends Subsystem implements Recordable {
             stop();
     }
 
+    public void timedMove(boolean goUp, double time)
+    {
+        RobotMap.timer.reset();
+        while(RobotMap.timer.time() < time)
+        {
+            if(goUp)
+                up();
+            else
+                down();
+        }
+        stop();
+    }
+
     @Override
     /**
      * Stops all elevator movement

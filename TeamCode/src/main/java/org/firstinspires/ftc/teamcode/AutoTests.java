@@ -26,8 +26,15 @@ public class AutoTests extends LinearOpMode {
 
 //        Robot.driveTrain.turn(0.4, 80);
         Robot.driveTrain.setBrakeMode(false);
-        Robot.driveTrain.halfEncoderDrive(0.5, 33, 33);
-        Robot.driveTrain.halfEncoderDrive(0.5, 33, 12);
+        Robot.driveTrain.encoderDrive(0.5, 33, 33);
+//        pause(1000);
+     //   Robot.driveTrain.encoderDrive(0.4, 12, 12);
+    }
+    public void pause(long milliseconds)
+    {
+        long sleepStart = System.currentTimeMillis();
+        while( milliseconds > System.currentTimeMillis() - sleepStart)
+        { }
     }
 
 

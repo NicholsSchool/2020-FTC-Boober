@@ -54,6 +54,29 @@ public class Intake extends Subsystem implements Recordable {
         move(Constants.SLOW_OUTTAKE_SPEED);
     }
 
+    public void timedMove(boolean intake, boolean fast, double time)
+    {
+        RobotMap.timer.reset();
+        while(RobotMap.timer.time() < time)
+        {
+            if(intake)
+            {
+                if(fast)
+                    fastIntake();
+                else
+                    slowIntake();
+            }
+            else
+            {
+                if(fast)
+                    fastOuttake();
+                else
+                    slowOuttake();
+            }
+        }
+        stop();
+    }
+
     @Override
     /**
      * The gripper's gamepad control code for teleop

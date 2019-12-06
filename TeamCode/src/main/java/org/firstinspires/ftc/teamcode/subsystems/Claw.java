@@ -18,7 +18,7 @@ public class Claw extends Subsystem implements Recordable {
     }
 
 
-    private void move(double speed)
+    public void move(double speed)
     {
         RobotMap.claw.setPower(speed);
     }
@@ -38,6 +38,19 @@ public class Claw extends Subsystem implements Recordable {
     {
         move(-1.0);
     }
+
+    public void timedMove(boolean goUp, double time)
+    {
+        RobotMap.timer.reset();
+        while(RobotMap.timer.time() < time) {
+            if (goUp)
+                up();
+            else
+                down();
+        }
+        stop();
+    }
+
 
     @Override
     /**

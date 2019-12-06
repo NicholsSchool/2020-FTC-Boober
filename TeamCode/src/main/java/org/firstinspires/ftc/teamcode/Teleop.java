@@ -22,7 +22,8 @@ public class Teleop extends OpMode
      * Intializes the objects within the Robot class
      */
     public void init() {
-        Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2);
+        Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
+        Robot.driveTrain.setBrakeMode(true);
     }
 
     @Override

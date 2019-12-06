@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.util.RobotMap;
 import java.io.File;
 import java.io.FileOutputStream;
 
-class SkystoneDetector {
+public class SkystoneDetector {
 
     private VuforiaLocalizer vuforia;
 

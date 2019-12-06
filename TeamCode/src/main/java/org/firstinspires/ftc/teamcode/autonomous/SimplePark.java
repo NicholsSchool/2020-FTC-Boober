@@ -15,7 +15,7 @@ public class SimplePark extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2, this);
-
+        Robot.driveTrain.setBrakeMode(false);
         waitForStart();
         run(Robot.colorPicker.isRed());
     }
