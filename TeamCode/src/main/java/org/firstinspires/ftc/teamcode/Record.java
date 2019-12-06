@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,19 +9,18 @@ import org.firstinspires.ftc.teamcode.util.record.RobotRecorder;
 
 import java.io.IOException;
 
+@Disabled
 @TeleOp(name="Teleop Record Test", group="Recording Tests")
 public class Record extends OpMode {
     private RobotRecorder recorder;
     private boolean isRecording;
 
     @Override
+    /**
+     * Intializes the objects within the Robot class and the RobotRecorder instance
+     */
     public void init() {
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
-        /*
-           !!!! MAY HAVE TO EDIT AndroidManifest.xml TO SAVE FILES !!!
-           May have to insert:
-           <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-         */
         isRecording = false;
         telemetry.addData("FilePath: ", Robot.filePath);
         try {
@@ -34,6 +34,9 @@ public class Record extends OpMode {
 
 
     @Override
+    /**
+     * Runs normal robot teleop, along with the option to record the robot's movements
+     */
     public void loop() {
         Robot.run();
         //Click Dpad down to begin recording
@@ -57,7 +60,7 @@ public class Record extends OpMode {
         {
             try {
                 recorder.record();
-                sleep(35);
+                sleep(35); //This is needed so that the RecordReader can stay in tune with the recordings
             } catch (IOException e) {
                 telemetry.addData("Recording IO error", e);
 
@@ -80,6 +83,9 @@ public class Record extends OpMode {
 
 
     @Override
+    /**
+     * Stops the robot movements and the recorder if needed.
+     */
     public void stop() {
         Robot.stop();
         if(recorder != null && !recorder.isWriterClosed())

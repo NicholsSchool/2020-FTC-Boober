@@ -5,18 +5,12 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
+import org.firstinspires.ftc.teamcode.sensors.SkystoneDetector.RobotPosition;
 
-import java.util.List;
 
 public class Camera {
-    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    private static final String LABEL_FIRST_ELEMENT = "Stone";
-    private static final String LABEL_SECOND_ELEMENT = "Skystone";
-
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
@@ -37,42 +31,51 @@ public class Camera {
      * localization engine.
      */
     private VuforiaLocalizer vuforia;
-
-
     private SkystoneDetector skystoneDetector;
 
     public Camera()
     {
         initVuforia();
 
-
         skystoneDetector = new SkystoneDetector(vuforia);
-        /**
-         * Activate TensorFlow Object Detection before we wait for the start command.
-         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-         **/
 
     }
 
-
-    public int testDetector()
+    public int getSkystonePosition(boolean saveBitmaps, boolean isRed, int robotPosition)
     {
-        SkystoneDetector.SkystonePosition position =  skystoneDetector.getSkystonePosition(true, false, SkystoneDetector.RobotPosition.BLUE_POSITION1);
+        RobotPosition robotPositionType = RobotPosition.BLUE_POSITION1;
+        if(isRed)
+        {
+            //  robotPositionType = RobotPosition.RED_POSITION1;
+            // if(robotPosition == 2)
+//                robotPosition = RobotPosition.RED_POSITION2;
+        }
+        else
+        {
+            robotPositionType = RobotPosition.BLUE_POSITION1;
+//            if(robotPosition == 2)
+//                robotPosition = RobotPosition.BLUE_POSITION2;
+        }
+        SkystoneDetector.SkystonePosition position =  skystoneDetector.getSkystonePosition(saveBitmaps, isRed, robotPositionType);
         RobotMap.telemetry.addData("Position ", position);
         switch(position)
         {
-            case LEFT:
+            case FAR:
                 return 3;
             case CENTER:
                 return 2;
-            case RIGHT:
+            case NEAR:
                 return 1;
             default:
                 return 1;
         }
-
     }
 
+    public int getSkystonePosition(boolean isRed, int robotPosition)
+    {
+
+        return getSkystonePosition(false, isRed, robotPosition);
+    }
 
     /**
      * Initialize the Vuforia localization engine.
@@ -87,9 +90,6 @@ public class Camera {
         parameters.cameraDirection = CameraDirection.BACK;
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
 
         FtcDashboard.getInstance().startCameraStream(vuforia, 0);
     }
