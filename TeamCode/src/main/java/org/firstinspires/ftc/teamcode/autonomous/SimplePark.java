@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.autonomous.movements.FaceBuildZone;
 import org.firstinspires.ftc.teamcode.util.Robot;
 
-@Autonomous(name="Simple Park", group="Autos")
+@Autonomous(name="Simple Park", group="Loading Side Autos")
 public class SimplePark extends LinearOpMode {
 
     private double driveSpeed = 0.5, turnSpeed = 0.4,

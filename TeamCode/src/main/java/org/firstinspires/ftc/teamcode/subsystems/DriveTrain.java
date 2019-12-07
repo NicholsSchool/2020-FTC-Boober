@@ -172,7 +172,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         speed *= -1;
         int[] targets = new int[4];
         int count = 0;
-        int error = 30;
+        int error = 15;
         for(int i = 0; i < motors.length; i ++)
         {
             if(!(motors[i] instanceof  DcMotor))
@@ -272,10 +272,13 @@ public class DriveTrain extends Subsystem implements Recordable {
             else
                 turn = Robot.gyro.getAngle() > angle;
             Robot.gyro.print();
+            System.out.println("Gyro Angle: " + Robot.gyro.getAngle());
+            System.out.println("Going to: " + angle);
             RobotMap.telemetry.update();
         }
         stop();
         resetEncoders();
+        System.out.println("\n\n\n");
     }
 
     /**
