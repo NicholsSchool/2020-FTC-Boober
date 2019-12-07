@@ -159,6 +159,27 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
+    public void testMove(double leftSpeed, double rightSpeed, double angle)
+    {
+        Robot.gyro.resetAngle();
+        move(leftSpeed, rightSpeed);
+        boolean turn = true;
+        while(Robot.opMode.opModeIsActive() && turn)
+        {
+            if(angle > 0)
+                turn = Robot.gyro.getAngle() < angle;
+            else
+                turn = Robot.gyro.getAngle() > angle;
+            Robot.gyro.print();
+            System.out.println("Gyro Angle: " + Robot.gyro.getAngle());
+            System.out.println("Going to: " + angle);
+            RobotMap.telemetry.update();
+        }
+        stop();
+        resetEncoders();
+        System.out.println("\n\n\n");
+    }
+
     /**
      * <u>Auto Method</u>
      * Does not use DcMotor's built in PID encoder movements but still uses the encoder values

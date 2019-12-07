@@ -25,7 +25,11 @@ public class MovePlatformFromBuild extends LinearOpMode {
             Robot.driveTrain.turn(turnSpeed, rightTurn);
         else
             Robot.driveTrain.turn(turnSpeed, leftTurn);
-        Robot.driveTrain.halfEncoderDrive(driveSpeed/1.5, 10, 10);
+        if(isRed)
+            Robot.driveTrain.halfEncoderDrive(driveSpeed/1.5, 10, 10);
+        else
+            Robot.driveTrain.halfEncoderDrive(driveSpeed/1.5, 16, 16);
+
         if(isRed)
             Robot.driveTrain.turn(turnSpeed, rightTurn);
         else
@@ -34,29 +38,29 @@ public class MovePlatformFromBuild extends LinearOpMode {
         Robot.driveTrain.halfEncoderDrive(-driveSpeed, -12, -12);
 
         Robot.claw.timedMove(false, 2);
-        Robot.claw.move(-0.2);
-        Robot.driveTrain.encoderDrive(driveSpeed/2,3, 3);
-        Robot.driveTrain.encoderDrive(driveSpeed,31, 31);
+        if(isRed)
+            Robot.claw.move(-0.2);
+        else
+            Robot.claw.move(-0.1);
+        Robot.driveTrain.halfEncoderDrive(driveSpeed/2,3, 3);
+
+        if(isRed) {
+            Robot.driveTrain.halfEncoderDrive(driveSpeed,12, 12);
+            Robot.driveTrain.testMove(-0.7, -0.5, rightTurn);
+        }
+        else {
+            Robot.driveTrain.halfEncoderDrive(driveSpeed,6, 6);
+            Robot.driveTrain.testMove(-0.3, -1, leftTurn);
+        }
         Robot.claw.timedMove(true, 2);
 
         if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn + 15);
-        else
-            Robot.driveTrain.turn(turnSpeed*1.5, leftTurn - 10);
-        if(isRed)
-            Robot.driveTrain.encoderDrive(driveSpeed,48, 48);
+            Robot.driveTrain.turn(turnSpeed, -10);
         else
         {
-            Robot.driveTrain.encoderDrive(driveSpeed,48, 48);
-            //This is done because the way the robot is built it drifts right
-            // So I need the right side to go faster just for this last part
-//            RobotMap.timer.reset();
-//            while(RobotMap.timer.time() < 3)
-//            {
-//                Robot.driveTrain.move(-driveSpeed, -driveSpeed - 0.1);
-//            }
-//            Robot.driveTrain.stop();
+
         }
+        Robot.driveTrain.halfEncoderDrive(driveSpeed,25, 25);
 
     }
 }
