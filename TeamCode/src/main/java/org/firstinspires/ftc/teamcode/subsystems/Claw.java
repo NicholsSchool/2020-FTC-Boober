@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 import org.firstinspires.ftc.teamcode.util.record.Recordable;
 
@@ -42,7 +43,7 @@ public class Claw extends Subsystem implements Recordable {
     public void timedMove(boolean goUp, double time)
     {
         RobotMap.timer.reset();
-        while(RobotMap.timer.time() < time) {
+        while(Robot.isAutoRunning() && RobotMap.timer.time() < time) {
             if (goUp)
                 up();
             else
@@ -51,11 +52,10 @@ public class Claw extends Subsystem implements Recordable {
         stop();
     }
 
-
-    @Override
     /**
      * Claw's gamepad control code for teleop
      */
+    @Override
     public void run()
     {
         if(RobotMap.g2.dpad_up )
@@ -66,27 +66,27 @@ public class Claw extends Subsystem implements Recordable {
             stop();
     }
 
-    @Override
     /**
      * Stops all claw movements
      */
+    @Override
     public void stop()
     {
         move(0);
     }
 
-    @Override
     /**
      * Returns values to record
      */
+    @Override
     public double[] getValues() {
         return new double[]{RobotMap.claw.getPower()};
     }
 
-    @Override
     /**
      * Sets the claw to the given value
      */
+    @Override
     public void setValues(double[] vals) {
         move(vals[0]);
     }

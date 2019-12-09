@@ -57,7 +57,7 @@ public class Intake extends Subsystem implements Recordable {
     public void timedMove(boolean intake, boolean fast, double time)
     {
         RobotMap.timer.reset();
-        while(RobotMap.timer.time() < time)
+        while(Robot.isAutoRunning() && RobotMap.timer.time() < time)
         {
             if(intake)
             {

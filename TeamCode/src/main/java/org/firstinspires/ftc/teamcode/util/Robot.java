@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -23,7 +24,7 @@ public class Robot {
     public static Claw claw;
   //  public static Camera camera;
     public static Gyro gyro;
-    public static LinearOpMode opMode;
+    private static LinearOpMode opMode;
     public static ColorPicker colorPicker;
     public static String filePath;
     public static String fileName;
@@ -102,6 +103,13 @@ public class Robot {
     {
         for(Subsystem s : subsystems.values())
             s.stop();
+    }
+
+    public static boolean isAutoRunning()
+    {
+        if(opMode == null) //This will happen if I decide to change it so our auto's run in OpMode
+            return true;
+        return opMode.opModeIsActive() && !opMode.isStopRequested();
     }
 
 }

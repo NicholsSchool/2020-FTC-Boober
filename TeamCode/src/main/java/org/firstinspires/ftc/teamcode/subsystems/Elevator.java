@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 import org.firstinspires.ftc.teamcode.util.record.Recordable;
 
@@ -52,7 +53,7 @@ public class Elevator extends Subsystem implements Recordable {
     public void timedMove(boolean goUp, double time)
     {
         RobotMap.timer.reset();
-        while(RobotMap.timer.time() < time)
+        while(Robot.isAutoRunning() && RobotMap.timer.time() < time)
         {
             if(goUp)
                 up();

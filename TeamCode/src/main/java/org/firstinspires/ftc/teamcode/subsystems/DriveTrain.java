@@ -104,7 +104,7 @@ public class DriveTrain extends Subsystem implements Recordable {
 
             boolean leftIsBusy = true, rightIsBusy = true;
             boolean prettyMuchThere = false;
-            while (Robot.opMode.opModeIsActive() && (leftIsBusy || rightIsBusy) && !prettyMuchThere) {
+            while (Robot.isAutoRunning() && (leftIsBusy || rightIsBusy) && !prettyMuchThere) {
                 count = 0;
                 prettyMuchThere = true;
 
@@ -164,7 +164,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         Robot.gyro.resetAngle();
         move(leftSpeed, rightSpeed);
         boolean turn = true;
-        while(Robot.opMode.opModeIsActive() && turn)
+        while(Robot.isAutoRunning() && turn)
         {
             if(angle > 0)
                 turn = Robot.gyro.getAngle() < angle;
@@ -193,7 +193,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         RobotMap.rfDrive.setPower(rightSpeed);
         RobotMap.rbDrive.setPower(rightSpeed);
         boolean turn = true;
-        while(Robot.opMode.opModeIsActive() && turn)
+        while(Robot.isAutoRunning() && turn)
         {
             if(angle > 0)
                 turn = Robot.gyro.getAngle() < angle;
@@ -243,7 +243,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
 
         boolean prettyMuchThere = false;
-        while (Robot.opMode.opModeIsActive()  && !prettyMuchThere) {
+        while (Robot.isAutoRunning()  && !prettyMuchThere) {
             count = 0;
             double average = 0;
             for(int i = 0; i < motors.length; i ++)
@@ -268,7 +268,7 @@ public class DriveTrain extends Subsystem implements Recordable {
 
         if(runClaw)
             Robot.claw.move(0);
-        for(int i = 0; i < motors.length && Robot.opMode.opModeIsActive(); i ++) {
+        for(int i = 0; i < motors.length; i ++) {
             if (!(motors[i] instanceof DcMotor)) {
                 motors[i].setPower(0);
                 continue;
@@ -277,6 +277,8 @@ public class DriveTrain extends Subsystem implements Recordable {
             }
         }
     }
+
+
 
     /**
      * <u>Auto Method</u>
@@ -299,7 +301,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         if(angle < 0)
             negation = -1;
         RobotMap.telemetry.addData("PID TURN",turnControl.onTarget());
-        while(Robot.opMode.opModeIsActive() && !turnControl.onTarget())
+        while(Robot.isAutoRunning() && !turnControl.onTarget())
         {
             double power = turnControl.performPID(Robot.gyro.getAngle());
             move(negation * power, -negation * power);
@@ -313,7 +315,7 @@ public class DriveTrain extends Subsystem implements Recordable {
     {
         speed *= -1;
         RobotMap.timer.reset();
-        while(RobotMap.timer.time() < time && Robot.opMode.opModeIsActive())
+        while(RobotMap.timer.time() < time && Robot.isAutoRunning())
         {
             RobotMap.lfDrive.setPower(speed);
             RobotMap.rfDrive.setPower(speed);
@@ -342,7 +344,7 @@ public class DriveTrain extends Subsystem implements Recordable {
 
         move(leftPower, rightPower);
         boolean turn = true;
-        while(Robot.opMode.opModeIsActive() && turn)
+        while(Robot.isAutoRunning() && turn)
         {
             if(angle > 0)
                 turn = Robot.gyro.getAngle() < angle;
@@ -369,7 +371,7 @@ public class DriveTrain extends Subsystem implements Recordable {
     {
         Robot.gyro.resetAngle();
         RobotMap.timer.reset();
-        while(Robot.opMode.opModeIsActive() &&  RobotMap.timer.time() < time )
+        while(Robot.isAutoRunning() &&  RobotMap.timer.time() < time )
         {
             double correction = Robot.gyro.getCorrection();
             move(speed - correction, speed + correction);
@@ -388,7 +390,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         speed *= -1;
         boolean allGood = false;
         boolean left = true, right = true;
-        while(Robot.opMode.opModeIsActive() && !allGood)
+        while(Robot.isAutoRunning() && !allGood)
         {
             allGood = true;
             for(int i = 0; i < motors.length; i ++)
@@ -485,10 +487,10 @@ public class DriveTrain extends Subsystem implements Recordable {
         return values;
     }
 
-    @Override
     /**
      * Sets DriveTrain's motors to given values
      */
+    @Override
     public void setValues(double[] vals) {
         for(int i = 0; i < vals.length; i ++)
             motors[i].setPower(vals[i]);
