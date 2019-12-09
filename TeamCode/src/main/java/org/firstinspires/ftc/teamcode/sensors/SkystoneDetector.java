@@ -15,22 +15,27 @@ import org.firstinspires.ftc.teamcode.util.RobotMap;
 import java.io.File;
 import java.io.FileOutputStream;
 
-class SkystoneDetector {
+public class SkystoneDetector {
 
     private VuforiaLocalizer vuforia;
 
-
-    //Play around with the red and green thresholds
     private final int RED_THRESHOLD = 100, GREEN_THRESHOLD = 100, BLACK_PIXEL_THRESHOLD = 20;
 
     public SkystoneDetector(VuforiaLocalizer vuforia) {
         this.vuforia = vuforia;
     }
 
+    /**
+     * All possible positions for the Skystone, either Far from bridge, Near bridge, in the Center
+     * or the Robot doesn't know
+     */
     public enum SkystonePosition {
-        LEFT, CENTER, RIGHT, UNCERTAIN;
+        FAR, CENTER, NEAR, UNCERTAIN
     }
 
+    /**
+     * Starting positions for the robot and the crop values at that position
+     */
     public enum RobotPosition {
 
         BLUE_POSITION1(658, 1070, 269, 305);
@@ -46,6 +51,13 @@ class SkystoneDetector {
         }
     }
 
+    /**
+     * Returns the position of the Skystone on the field
+     * @param saveBitmaps - true if user wants the images taken by the phone to be saved
+     * @param red - true if on the red side
+     * @param position - the position of the robot on the field
+     * @return the position of the Skystone on the field
+     */
     public SkystonePosition getSkystonePosition(boolean saveBitmaps, boolean red, RobotPosition position)
     {
         RobotMap.telemetry.addLine("Running Scan");
@@ -73,20 +85,30 @@ class SkystoneDetector {
         RobotMap.telemetry.addData("Stone One Blacks: ", stoneOneBlacks);
         RobotMap.telemetry.addData("Stone Two Blacks: ", stoneTwoBlacks);
 
-        if(stoneOneBlacks > BLACK_PIXEL_THRESHOLD)
-            return SkystonePosition.CENTER;
-        if(stoneTwoBlacks > BLACK_PIXEL_THRESHOLD)
-            return SkystonePosition.RIGHT;
+        if(stoneOneBlacks > BLACK_PIXEL_THRESHOLD) {
+            if (red)
+                return SkystonePosition.CENTER;
+            else
+                return SkystonePosition.NEAR;
+        }
+        if(stoneTwoBlacks > BLACK_PIXEL_THRESHOLD) {
+            if(red)
+                return SkystonePosition.NEAR;
+            else
+                return SkystonePosition.CENTER;
+        }
         else
-            return SkystonePosition.LEFT;
+            return SkystonePosition.FAR;
 
     }
 
-    public void test()
-    {
-      //  getBitmap(true, true);
-    }
-
+    /**
+     * Returns a cropped bitmap image of the field
+     * @param saveBitmaps - true if user wants the images taken by the phone to be saved
+     * @param red - true if on the red side
+     * @param position - the position of the robot on the field
+     * @return a cropped bitmap image of the field
+     */
     private Bitmap getBitmap(boolean saveBitmaps, boolean red, RobotPosition position) {
 
         Image rgbImage = getImage();
@@ -109,7 +131,7 @@ class SkystoneDetector {
         if (saveBitmaps)
             saveBitmap(bitmap, bitmapName);
 
-//        //Cropped Bitmap to show only stones
+        //Cropped Bitmap to show only stones
         bitmap = Bitmap.createBitmap(bitmap, position.leftX, position.topY,
                 position.rightX-position.leftX, position.bottomY-position.topY);
 
@@ -122,6 +144,10 @@ class SkystoneDetector {
 
     }
 
+    /**
+     * Returns the current Image on the vuforia stream
+     * @return the current Image on the vuforia stream
+     */
     private Image getImage()
     {
         Image image = null;
@@ -145,6 +171,11 @@ class SkystoneDetector {
         return image;
     }
 
+    /**
+     * Saves bitmap to a file as a .png
+     * @param bitmap - the bitmap to save as a .png
+     * @param fileName - the file to save to
+     */
     private void saveBitmap(Bitmap bitmap, String fileName)
     {
         try {

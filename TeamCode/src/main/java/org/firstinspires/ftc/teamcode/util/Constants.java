@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.util;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
+/**
+ * All possible values that may need adjusting for robot gameplay
+ */
 public class Constants {
 
     public static double DRIVE_BUFFER = 1.0;

@@ -11,37 +11,33 @@ import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 
 
-@TeleOp(name="BooberTeleop", group="Iterative Opmode")
+@TeleOp(name="Ok Boober Teleop", group="Iterative Opmode")
+/**
+ * The game play teleop code to run
+ */
 public class Teleop extends OpMode
 {
     @Override
+    /**
+     * Intializes the objects within the Robot class
+     */
     public void init() {
-        Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2);
-
+        Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
+        Robot.driveTrain.setBrakeMode(true);
     }
 
     @Override
+    /**
+     * Runs the robot movements
+     */
     public void loop() {
         Robot.run();
-        if(RobotMap.g1.y) {
-            Robot.camera.testDetector();
-            RobotMap.telemetry.update();
-        }
-//        colorSensorData(RobotMap.lColorSensor, "left");
-//        colorSensorData(RobotMap.rColorSensor, "right");
-
-    }
-
-    private void colorSensorData(ColorSensor sensor, String type)
-    {
-        RobotMap.telemetry.addData(type + "sensor blue",sensor.blue());
-        RobotMap.telemetry.addData(type + "sensor green",sensor.green());
-        RobotMap.telemetry.addData(type + "sensor red",sensor.red());
-        RobotMap.telemetry.addData(type + "sensor alpha",sensor.alpha());
-        RobotMap.telemetry.addData(type + "sensor alpha",sensor.argb());
     }
 
     @Override
+    /**
+     * Stops all Robot movements
+     */
     public void stop() {
         Robot.stop();
     }
