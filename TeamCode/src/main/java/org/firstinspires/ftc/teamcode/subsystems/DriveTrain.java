@@ -180,6 +180,45 @@ public class DriveTrain extends Subsystem implements Recordable {
         System.out.println("\n\n\n");
     }
 
+    public void frontTestMove(double leftSpeed, double rightSpeed, double angle)
+    {
+        frontTestMove(leftSpeed, rightSpeed, angle, false, 0);
+    }
+
+    public void frontTestMove(double leftSpeed, double rightSpeed, double angle, boolean runClaw, double moveClaw)
+    {
+        Robot.gyro.resetAngle();
+        RobotMap.lfDrive.setPower(leftSpeed);
+        RobotMap.lmDrive.setPower(leftSpeed);
+        RobotMap.rfDrive.setPower(rightSpeed);
+        RobotMap.rbDrive.setPower(rightSpeed);
+        boolean turn = true;
+        while(Robot.opMode.opModeIsActive() && turn)
+        {
+            if(angle > 0)
+                turn = Robot.gyro.getAngle() < angle;
+            else
+                turn = Robot.gyro.getAngle() > angle;
+            Robot.gyro.print();
+            System.out.println("Gyro Angle: " + Robot.gyro.getAngle());
+            System.out.println("Going to: " + angle);
+            RobotMap.telemetry.update();
+            if(runClaw)
+                Robot.claw.move(moveClaw);
+        }
+        if(runClaw)
+            Robot.claw.move(0);
+        stop();
+        resetEncoders();
+        System.out.println("\n\n\n");
+    }
+
+    public void halfEncoderDrive(double speed, double leftInches, double rightInches)
+    {
+        halfEncoderDrive(speed, leftInches, rightInches, false, 0);
+    }
+
+
     /**
      * <u>Auto Method</u>
      * Does not use DcMotor's built in PID encoder movements but still uses the encoder values
@@ -188,7 +227,7 @@ public class DriveTrain extends Subsystem implements Recordable {
      * @param leftInches - the number of inches for the left side to move
      * @param rightInches - the number of inches for the right side to move
      */
-    public void halfEncoderDrive(double speed, double leftInches, double rightInches)
+    public void halfEncoderDrive(double speed, double leftInches, double rightInches, boolean runClaw, double moveClaw)
     {
         speed *= -1;
         int[] targets = new int[4];
@@ -222,9 +261,14 @@ public class DriveTrain extends Subsystem implements Recordable {
             else
                 prettyMuchThere = average/(double)count > -error;
             RobotMap.telemetry.update();
+            if(runClaw)
+                Robot.claw.move(moveClaw);
 
         }
-        for(int i = 0; i < motors.length; i ++) {
+
+        if(runClaw)
+            Robot.claw.move(0);
+        for(int i = 0; i < motors.length && Robot.opMode.opModeIsActive(); i ++) {
             if (!(motors[i] instanceof DcMotor)) {
                 motors[i].setPower(0);
                 continue;
@@ -261,6 +305,18 @@ public class DriveTrain extends Subsystem implements Recordable {
             move(negation * power, -negation * power);
             Robot.gyro.print();
             RobotMap.telemetry.update();
+        }
+        stop();
+    }
+
+    public void timedMove(double speed, double time)
+    {
+        speed *= -1;
+        RobotMap.timer.reset();
+        while(RobotMap.timer.time() < time && Robot.opMode.opModeIsActive())
+        {
+            RobotMap.lfDrive.setPower(speed);
+            RobotMap.rfDrive.setPower(speed);
         }
         stop();
     }

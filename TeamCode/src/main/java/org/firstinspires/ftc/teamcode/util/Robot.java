@@ -21,7 +21,7 @@ public class Robot {
     public static Intake intake;
     public static Elevator elevator;
     public static Claw claw;
-    public static Camera camera;
+  //  public static Camera camera;
     public static Gyro gyro;
     public static LinearOpMode opMode;
     public static ColorPicker colorPicker;
@@ -44,7 +44,7 @@ public class Robot {
         intake = new Intake("Intake");
         elevator = new Elevator("Elevator");
         claw = new Claw("Claw");
-        camera = new Camera();
+      //  camera = new Camera();
         gyro = new Gyro();
         colorPicker = new ColorPicker();
         filePath = Environment.getExternalStorageDirectory().getPath();
