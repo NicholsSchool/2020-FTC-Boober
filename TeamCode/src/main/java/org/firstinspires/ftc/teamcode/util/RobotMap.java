@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -44,12 +45,12 @@ public class RobotMap {
     public static void init(HardwareMap hw, Telemetry t, Gamepad gamepad1, Gamepad gamepad2)
     {
         lfDrive = hw.get(DcMotorSimple.class, "LFDrive");
-        lmDrive = hw.get(DcMotor.class, "LMDrive");
-        lbDrive = hw.get(DcMotor.class, "LBDrive");
+        lmDrive = hw.get(DcMotorImplEx.class, "LMDrive");
+        lbDrive = hw.get(DcMotorImplEx.class, "LBDrive");
 
         rfDrive = hw.get(DcMotorSimple.class, "RFDrive");
-        rmDrive = hw.get(DcMotor.class, "RMDrive");
-        rbDrive = hw.get(DcMotor.class, "RBDrive");
+        rmDrive = hw.get(DcMotorImplEx.class, "RMDrive");
+        rbDrive = hw.get(DcMotorImplEx.class, "RBDrive");
 
         lGripper = hw.get(DcMotorSimple.class, "LGripper");
         rGripper = hw.get(DcMotorSimple.class, "RGripper");
@@ -84,13 +85,13 @@ public class RobotMap {
 
         elevator.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        lfDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        lmDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        lbDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        lfDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        lmDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        lbDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        rfDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rmDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rbDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rfDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rmDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rbDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         claw.setDirection(DcMotorSimple.Direction.REVERSE);
 

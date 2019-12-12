@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
@@ -16,7 +18,7 @@ public class DriveTrain extends Subsystem implements Recordable {
 
 
     private static final double
-            COUNTS_PER_REV  = -530, INCHES_PER_REV = 4 * Math.PI, COUNTS_PER_INCH = COUNTS_PER_REV/INCHES_PER_REV;
+            COUNTS_PER_REV  = 530, INCHES_PER_REV = 4 * Math.PI, COUNTS_PER_INCH = COUNTS_PER_REV/INCHES_PER_REV;
     private DcMotorSimple[] motors;
     private boolean isArcadeDrive;
     /**
@@ -67,7 +69,7 @@ public class DriveTrain extends Subsystem implements Recordable {
      */
     public void tankDrive()
     {
-        move(RobotMap.g1.left_stick_y, RobotMap.g1.right_stick_y);
+        move(-RobotMap.g1.left_stick_y, -RobotMap.g1.right_stick_y);
     }
 
     /**
@@ -75,7 +77,69 @@ public class DriveTrain extends Subsystem implements Recordable {
      */
     public void arcadeDrive()
     {
-        move( RobotMap.g1.right_stick_y - RobotMap.g1.left_stick_x, RobotMap.g1.right_stick_y + RobotMap.g1.left_stick_x);
+        move( -(RobotMap.g1.right_stick_y - RobotMap.g1.left_stick_x), -(RobotMap.g1.right_stick_y + RobotMap.g1.left_stick_x));
+    }
+
+    public void newEncoderDrive(double speed, double leftInches, double rightInches, double timeoutS)
+    {
+        int lmTarget, lbTarget, rmTarget, rbTarget;
+
+        // Ensure that the opmode is still active
+        if (Robot.opMode.opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            lmTarget = RobotMap.lmDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            lbTarget = RobotMap.lbDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            rmTarget = RobotMap.rmDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            rbTarget = RobotMap.rbDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            RobotMap.lmDrive.setTargetPosition(lmTarget);
+            RobotMap.lbDrive.setTargetPosition(lbTarget);
+            RobotMap.rmDrive.setTargetPosition(rmTarget);
+            RobotMap.rbDrive.setTargetPosition(rbTarget);
+
+            // Turn On RUN_TO_POSITION
+            RobotMap.lmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RobotMap.lbDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            RobotMap.rmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RobotMap.rbDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            RobotMap.timer.reset();
+            RobotMap.lmDrive.setPower(Math.abs(speed));
+            RobotMap.lbDrive.setPower(Math.abs(speed));
+
+            RobotMap.rmDrive.setPower(Math.abs(speed));
+            RobotMap.rbDrive.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (Robot.opMode.opModeIsActive() && (RobotMap.timer.seconds() < timeoutS) &&
+                    (RobotMap.lmDrive.isBusy() && RobotMap.lbDrive.isBusy() &&
+                    RobotMap.rmDrive.isBusy() && RobotMap.rbDrive.isBusy())) {
+
+            }
+
+            // Stop all motion;
+            RobotMap.lmDrive.setPower(Math.abs(0));
+            RobotMap.lbDrive.setPower(Math.abs(0));
+
+            RobotMap.rmDrive.setPower(Math.abs(0));
+            RobotMap.rbDrive.setPower(Math.abs(0));
+
+            // Turn off RUN_TO_POSITION
+            RobotMap.lmDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RobotMap.lbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            RobotMap.rmDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RobotMap.rbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
+        }
     }
 
     /**
@@ -92,9 +156,9 @@ public class DriveTrain extends Subsystem implements Recordable {
             int error = 10;
             for(int i = 0; i < motors.length; i ++)
             {
-                if(!(motors[i] instanceof  DcMotor))
+                if(!(motors[i] instanceof DcMotorImplEx))
                     continue;
-                DcMotor m = (DcMotor) motors[i];
+                DcMotorImplEx m = (DcMotorImplEx) motors[i];
                 int target = m.getCurrentPosition() + (int)((i < motors.length/2 ? leftInches : rightInches) * COUNTS_PER_INCH);
                 targets[count ++ ] = target;
                 m.setTargetPosition(target);
@@ -110,11 +174,11 @@ public class DriveTrain extends Subsystem implements Recordable {
 
                 for(int i = 0; i < motors.length; i ++)
                 {
-                    if(!(motors[i] instanceof  DcMotor)) {
+                    if(!(motors[i] instanceof  DcMotorImplEx)) {
                      //   motors[i].setPower(motors[i + 1].getPower());
                         continue;
                     }
-                    DcMotor m = (DcMotor) motors[i];
+                    DcMotorImplEx m = (DcMotorImplEx) motors[i];
                     prettyMuchThere = prettyMuchThere && Math.abs(m.getCurrentPosition() - targets[count ++]) < error;
                     if(i < motors.length)
                         leftIsBusy = leftIsBusy && m.isBusy();
@@ -125,11 +189,11 @@ public class DriveTrain extends Subsystem implements Recordable {
 
             for(int i = 0; i < motors.length; i ++)
             {
-                if(!(motors[i] instanceof  DcMotor)) {
+                if(!(motors[i] instanceof  DcMotorImplEx)) {
                   //  motors[i].setPower(0);
                     continue;
                 }
-                DcMotor m = (DcMotor) motors[i];
+                DcMotorImplEx m = (DcMotorImplEx) motors[i];
                 m.setPower(0);
                 m.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //Check what mode it should be
             }
@@ -151,10 +215,10 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
         for(int i = 0; i < motors.length; i ++)
         {
-            if(!(motors[i] instanceof  DcMotor)) {
+            if(!(motors[i] instanceof  DcMotorImplEx)) {
                 continue;
             }
-            DcMotor m = (DcMotor) motors[i];
+            DcMotorImplEx m = (DcMotorImplEx) motors[i];
             m.setZeroPowerBehavior(type);
         }
     }
@@ -229,15 +293,14 @@ public class DriveTrain extends Subsystem implements Recordable {
      */
     public void halfEncoderDrive(double speed, double leftInches, double rightInches, boolean runClaw, double moveClaw)
     {
-        speed *= -1;
         int[] targets = new int[4];
         int count = 0;
         int error = 15;
         for(int i = 0; i < motors.length; i ++)
         {
-            if(!(motors[i] instanceof  DcMotor))
+            if(!(motors[i] instanceof  DcMotorImplEx))
                 continue;
-            DcMotor m = (DcMotor) motors[i];
+            DcMotorImplEx m = (DcMotorImplEx) motors[i];
             int target = m.getCurrentPosition() + (int)((i < motors.length/2 ? leftInches : rightInches) * COUNTS_PER_INCH);
             targets[count ++ ] = target;
         }
@@ -248,11 +311,11 @@ public class DriveTrain extends Subsystem implements Recordable {
             double average = 0;
             for(int i = 0; i < motors.length; i ++)
             {
-                if(!(motors[i] instanceof  DcMotor)) {
+                if(!(motors[i] instanceof  DcMotorImplEx)) {
                        motors[i].setPower(speed);
                         continue;
                 }
-                DcMotor m = (DcMotor) motors[i];
+                DcMotorImplEx m = (DcMotorImplEx) motors[i];
                 average +=  targets[count ++] - m.getCurrentPosition();
             }
             System.out.println(average/(double)count);
@@ -269,7 +332,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         if(runClaw)
             Robot.claw.move(0);
         for(int i = 0; i < motors.length && Robot.opMode.opModeIsActive(); i ++) {
-            if (!(motors[i] instanceof DcMotor)) {
+            if (!(motors[i] instanceof DcMotorImplEx)) {
                 motors[i].setPower(0);
                 continue;
                 // resetEncoders();
@@ -311,12 +374,10 @@ public class DriveTrain extends Subsystem implements Recordable {
 
     public void timedMove(double speed, double time)
     {
-        speed *= -1;
         RobotMap.timer.reset();
         while(RobotMap.timer.time() < time && Robot.opMode.opModeIsActive())
         {
-            RobotMap.lfDrive.setPower(speed);
-            RobotMap.rfDrive.setPower(speed);
+           move(speed, speed);
         }
         stop();
     }
@@ -385,7 +446,6 @@ public class DriveTrain extends Subsystem implements Recordable {
      */
     public void colorDrive(double speed)
     {
-        speed *= -1;
         boolean allGood = false;
         boolean left = true, right = true;
         while(Robot.opMode.opModeIsActive() && !allGood)
@@ -463,6 +523,18 @@ public class DriveTrain extends Subsystem implements Recordable {
             isArcadeDrive = false;
         else if(RobotMap.g1.dpad_down)
             isArcadeDrive = true;
+
+        System.out.println(RobotMap.lmDrive.getClass());
+        System.out.println("Front: " + RobotMap.lfDrive.getClass());
+        RobotMap.telemetry.addData("Drive Class:" , RobotMap.lmDrive.getClass());
+        RobotMap.telemetry.addData("Front Drives: ", RobotMap.lfDrive.getClass());
+        for(int i = 0; i < motors.length; i ++) {
+            if (!(motors[i] instanceof DcMotorImplEx))
+                continue;
+            DcMotorImplEx m = (DcMotorImplEx)motors[i];
+            System.out.println("Motor " + i + " PID Stuff: " +  m.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+        }
+
     }
 
     @Override
