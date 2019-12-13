@@ -347,7 +347,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         double leftPower = speed;
         double rightPower = -speed;
 
-        if (angle < 0)
+        if (angle > 0)
         {   // turn left.
             leftPower = -speed;
             rightPower = speed;
