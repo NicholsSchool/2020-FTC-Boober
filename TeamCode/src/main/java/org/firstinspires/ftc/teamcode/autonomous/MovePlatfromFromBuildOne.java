@@ -18,21 +18,21 @@ public class MovePlatfromFromBuildOne extends LinearOpMode {
     }
 
     public void run(boolean isRed) {
-        Robot.driveTrain.halfEncoderDrive(driveSpeed, 12, 12);
+        Robot.driveTrain.encoderDrive(driveSpeed, 12, 12, 3);
         if(isRed)
             Robot.driveTrain.turn(turnSpeed, rightTurn);
         else
             Robot.driveTrain.turn(turnSpeed, leftTurn);
-        Robot.driveTrain.halfEncoderDrive(driveSpeed/1.5, 16, 16);
+        Robot.driveTrain.encoderDrive(driveSpeed/1.5, 16, 16, 3);
         if(isRed)
             Robot.driveTrain.turn(turnSpeed, rightTurn);
         else
             Robot.driveTrain.turn(turnSpeed, leftTurn);
 
-        Robot.driveTrain.halfEncoderDrive(-driveSpeed, -12.5, -12.5);
+        Robot.driveTrain.encoderDrive(-driveSpeed, -12.5, -12.5, 3);
 
         Robot.claw.timedMove(false, 2);
-        Robot.driveTrain.halfEncoderDrive(driveSpeed/2,3, 3, true, -0.2);
+        Robot.driveTrain.encoderDrive(driveSpeed/2,3, 3, 3);
         Robot.driveTrain.timedMove(driveSpeed, 4);
         Robot.claw.timedMove(true, 2);
 

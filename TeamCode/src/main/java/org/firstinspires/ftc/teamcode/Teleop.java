@@ -89,6 +89,11 @@ public class Teleop extends OpMode
 //            RobotMap.telemetry.addLine("ALL MOTORS STOPPED");
 //        }
         Robot.driveTrain.printEncoders();
+        if(RobotMap.g1.a)
+            Robot.driveTrain.resetEncoders();
+        if(RobotMap.g1.y)
+            Robot.gyro.resetAngle();
+        Robot.gyro.print();
         RobotMap.telemetry.update();
     }
 

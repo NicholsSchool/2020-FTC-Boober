@@ -18,7 +18,8 @@ public class AutoTests extends LinearOpMode {
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2, this);
 
         waitForStart();
-        Robot.driveTrain.newEncoderDrive(0.5, 12, 12, 3);
+        Robot.driveTrain.encoderDrive(0.5, 36, 36, 10);
+        pause(10000);
     }
     public void pause(long milliseconds)
     {

@@ -31,15 +31,15 @@ public class MovePlatform extends LinearOpMode {
         Robot.driveTrain.halfEncoderDrive(-driveSpeed, -11, -11);
         Robot.claw.timedMove(false, 2);
         Robot.claw.move(-0.2);
-        Robot.driveTrain.encoderDrive(driveSpeed/2,3, 3);
-        Robot.driveTrain.encoderDrive(driveSpeed,31, 31);
+        Robot.driveTrain.encoderDrive(driveSpeed/2,3, 3, 3);
+        Robot.driveTrain.encoderDrive(driveSpeed,31, 31, 3);
         Robot.claw.timedMove(true, 2);
         if(isRed)
             Robot.driveTrain.turn(turnSpeed, rightTurn);
         else
             Robot.driveTrain.turn(turnSpeed, leftTurn);
         if(isRed)
-            Robot.driveTrain.encoderDrive(driveSpeed,46, 46);
+            Robot.driveTrain.encoderDrive(driveSpeed,46, 46, 3);
         else
         {
             //This is done because the way the robot is built it drifts right

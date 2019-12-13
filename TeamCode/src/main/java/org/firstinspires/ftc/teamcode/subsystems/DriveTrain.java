@@ -18,7 +18,7 @@ public class DriveTrain extends Subsystem implements Recordable {
 
 
     private static final double
-            COUNTS_PER_REV  = 530, INCHES_PER_REV = 4 * Math.PI, COUNTS_PER_INCH = COUNTS_PER_REV/INCHES_PER_REV;
+            COUNTS_PER_REV  = 515, INCHES_PER_REV = 4 * Math.PI, COUNTS_PER_INCH = COUNTS_PER_REV/INCHES_PER_REV;
     private DcMotorSimple[] motors;
     private boolean isArcadeDrive;
     /**
@@ -80,13 +80,21 @@ public class DriveTrain extends Subsystem implements Recordable {
         move( -(RobotMap.g1.right_stick_y - RobotMap.g1.left_stick_x), -(RobotMap.g1.right_stick_y + RobotMap.g1.left_stick_x));
     }
 
-    public void newEncoderDrive(double speed, double leftInches, double rightInches, double timeoutS)
+    /**
+     * <u>Auto Method</u>
+     * Uses the built in PID encoder movements of the DcMotor class to drive to position
+     * @param speed - the speed to drive at
+     * @param leftInches - the number of inches for the left side to move
+     * @param rightInches - the number of inches for the right side to move
+     * @param timeoutS - max seconds for the command to run
+     */
+    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS)
     {
         int lmTarget, lbTarget, rmTarget, rbTarget;
 
         // Ensure that the opmode is still active
         if (Robot.opMode.opModeIsActive()) {
-
+            resetEncoders();
             // Determine new target position, and pass to motor controller
             lmTarget = RobotMap.lmDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             lbTarget = RobotMap.lbDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
@@ -119,9 +127,11 @@ public class DriveTrain extends Subsystem implements Recordable {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (Robot.opMode.opModeIsActive() && (RobotMap.timer.seconds() < timeoutS) &&
-                    (RobotMap.lmDrive.isBusy() && RobotMap.lbDrive.isBusy() &&
-                    RobotMap.rmDrive.isBusy() && RobotMap.rbDrive.isBusy())) {
-
+                    (RobotMap.lmDrive.isBusy() || RobotMap.lbDrive.isBusy() ||
+                    RobotMap.rmDrive.isBusy() || RobotMap.rbDrive.isBusy())) {
+                    printEncodersInInches();
+                    printEncoders();
+                    RobotMap.telemetry.update();
             }
 
             // Stop all motion;
@@ -142,65 +152,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
-    /**
-     * <u>Auto Method</u>
-     * Uses the built in PID encoder movements of the DcMotor class to drive to position
-     * @param speed - the speed to drive at
-     * @param leftInches - the number of inches for the left side to move
-     * @param rightInches - the number of inches for the right side to move
-     */
-    public void encoderDrive(double speed, double leftInches, double rightInches) {
 
-            int[] targets = new int[4];
-            int count = 0;
-            int error = 10;
-            for(int i = 0; i < motors.length; i ++)
-            {
-                if(!(motors[i] instanceof DcMotorImplEx))
-                    continue;
-                DcMotorImplEx m = (DcMotorImplEx) motors[i];
-                int target = m.getCurrentPosition() + (int)((i < motors.length/2 ? leftInches : rightInches) * COUNTS_PER_INCH);
-                targets[count ++ ] = target;
-                m.setTargetPosition(target);
-                m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                m.setPower(speed);
-            }
-
-            boolean leftIsBusy = true, rightIsBusy = true;
-            boolean prettyMuchThere = false;
-            while (Robot.opMode.opModeIsActive() && (leftIsBusy || rightIsBusy) && !prettyMuchThere) {
-                count = 0;
-                prettyMuchThere = true;
-
-                for(int i = 0; i < motors.length; i ++)
-                {
-                    if(!(motors[i] instanceof  DcMotorImplEx)) {
-                     //   motors[i].setPower(motors[i + 1].getPower());
-                        continue;
-                    }
-                    DcMotorImplEx m = (DcMotorImplEx) motors[i];
-                    prettyMuchThere = prettyMuchThere && Math.abs(m.getCurrentPosition() - targets[count ++]) < error;
-                    if(i < motors.length)
-                        leftIsBusy = leftIsBusy && m.isBusy();
-                    else
-                        rightIsBusy = rightIsBusy && m.isBusy();
-                }
-            }
-
-            for(int i = 0; i < motors.length; i ++)
-            {
-                if(!(motors[i] instanceof  DcMotorImplEx)) {
-                  //  motors[i].setPower(0);
-                    continue;
-                }
-                DcMotorImplEx m = (DcMotorImplEx) motors[i];
-                m.setPower(0);
-                m.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //Check what mode it should be
-            }
-
-
-
-    }
 
     /**
      * Turns on or off Brake ZeroPowerBehavior for the DcMotors within the DriveTrain
@@ -487,6 +439,17 @@ public class DriveTrain extends Subsystem implements Recordable {
                 continue;
             DcMotor m = (DcMotor) motors[i];
             RobotMap.telemetry.addData("Encoder i ", m.getCurrentPosition());
+        }
+    }
+
+    public void printEncodersInInches()
+    {
+        for(int i = 0; i < motors.length; i ++)
+        {
+            if(!(motors[i] instanceof  DcMotor))
+                continue;
+            DcMotor m = (DcMotor) motors[i];
+            RobotMap.telemetry.addData("Inches Encoder i ", m.getCurrentPosition()/COUNTS_PER_INCH);
         }
     }
 

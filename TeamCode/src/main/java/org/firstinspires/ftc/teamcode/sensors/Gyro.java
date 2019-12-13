@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.sensors;
 
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,7 +19,6 @@ public class Gyro {
     public double getAngle()
     {
         Orientation angles = RobotMap.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
         if (deltaAngle < -180)
@@ -60,9 +60,11 @@ public class Gyro {
      */
     public void print()
     {
+        getAngle();
         RobotMap.telemetry.addData("1 imu heading", lastAngles.firstAngle);
         RobotMap.telemetry.addData("2 global heading", globalAngle);
         RobotMap.telemetry.addData("3 correction", correction);
+        RobotMap.telemetry.addData("calib", RobotMap.imu.getCalibrationStatus().toString());
     }
 
     /**
