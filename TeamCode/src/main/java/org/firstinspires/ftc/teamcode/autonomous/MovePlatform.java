@@ -25,9 +25,9 @@ public class MovePlatform extends LinearOpMode {
         new FaceBuildZone(driveSpeed, turnSpeed, leftTurn, rightTurn).run(isRed);
         Robot.driveTrain.halfEncoderDrive(driveSpeed, 87, 87);
         if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn);
+            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
         else
-            Robot.driveTrain.turn(turnSpeed, leftTurn);
+            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
         Robot.driveTrain.halfEncoderDrive(-driveSpeed, -11, -11);
         Robot.claw.timedMove(false, 2);
         Robot.claw.move(-0.2);
@@ -35,9 +35,9 @@ public class MovePlatform extends LinearOpMode {
         Robot.driveTrain.encoderDrive(driveSpeed,31, 31, 3);
         Robot.claw.timedMove(true, 2);
         if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn);
+            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
         else
-            Robot.driveTrain.turn(turnSpeed, leftTurn);
+            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
         if(isRed)
             Robot.driveTrain.encoderDrive(driveSpeed,46, 46, 3);
         else

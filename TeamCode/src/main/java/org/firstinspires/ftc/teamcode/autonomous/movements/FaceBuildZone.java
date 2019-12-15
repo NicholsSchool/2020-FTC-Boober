@@ -20,8 +20,8 @@ public class FaceBuildZone {
         RobotMap.telemetry.addLine("About to turn");
         RobotMap.telemetry.update();
         if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn);
+            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
         else
-            Robot.driveTrain.turn(turnSpeed, leftTurn);
+            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
     }
 }

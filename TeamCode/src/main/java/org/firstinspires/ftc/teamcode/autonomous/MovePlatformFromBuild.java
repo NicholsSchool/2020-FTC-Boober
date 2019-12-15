@@ -34,18 +34,18 @@ public class MovePlatformFromBuild extends LinearOpMode {
     public void run(boolean isRed) {
         Robot.driveTrain.halfEncoderDrive(driveSpeed, 12, 12);
         if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn);
+            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
         else
-            Robot.driveTrain.turn(turnSpeed, leftTurn);
+            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
         if(isRed)
             Robot.driveTrain.halfEncoderDrive(driveSpeed/1.5, 10, 10);
         else
             Robot.driveTrain.halfEncoderDrive(driveSpeed/1.5, 16, 16);
 
         if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn);
+            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
         else
-            Robot.driveTrain.turn(turnSpeed, leftTurn);
+            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
 
         Robot.driveTrain.halfEncoderDrive(-driveSpeed, -12, -12);
 
@@ -66,10 +66,10 @@ public class MovePlatformFromBuild extends LinearOpMode {
         Robot.claw.timedMove(true, 2);
 
         if(isRed)
-            Robot.driveTrain.turn(turnSpeed, -15);
+            Robot.driveTrain.turn(turnSpeed, -15, 3);
         else
         {
-            Robot.driveTrain.turn(turnSpeed, 15);
+            Robot.driveTrain.turn(turnSpeed, 15, 3);
         }
         Robot.driveTrain.halfEncoderDrive(driveSpeed,25, 25);
 

@@ -60,7 +60,7 @@ public class Gyro {
      */
     public void print()
     {
-        getAngle();
+     //   getAngle();
         RobotMap.telemetry.addData("1 imu heading", lastAngles.firstAngle);
         RobotMap.telemetry.addData("2 global heading", globalAngle);
         RobotMap.telemetry.addData("3 correction", correction);

@@ -338,37 +338,48 @@ public class DriveTrain extends Subsystem implements Recordable {
      * <u>Auto Method</u>
      * Turns Robot to given angle
      * @param speed - the speed to turn
-     * @param angle - the target angle
+     * @param desiredAngle - the target angle
      */
-    public void turn(double speed, double angle)
+    public void turn(double speed, double desiredAngle, double timeoutS)
     {
-        Robot.gyro.resetAngle();
-          // turn right.
-        double leftPower = speed;
-        double rightPower = -speed;
+        if(Robot.opMode.opModeIsActive()) {
+            Robot.gyro.resetAngle();
 
-        if (angle > 0)
-        {   // turn left.
-            leftPower = -speed;
-            rightPower = speed;
-        }
+            double negation = 1; //turn right
+            if(desiredAngle > 0)
+                negation = -1; // turn left
 
-        move(leftPower, rightPower);
-        boolean turn = true;
-        while(Robot.opMode.opModeIsActive() && turn)
-        {
-            if(angle > 0)
-                turn = Robot.gyro.getAngle() < angle;
-            else
-                turn = Robot.gyro.getAngle() > angle;
-            Robot.gyro.print();
-            System.out.println("Gyro Angle: " + Robot.gyro.getAngle());
-            System.out.println("Going to: " + angle);
+            double leftPower = speed * negation;
+            double rightPower = -speed * negation;
+
+            move(leftPower, rightPower);
+            boolean turn = true;
+            RobotMap.timer.reset();
+            double p = 0.2;
+            double maxError = 180;
+            double minSpeed = 0.3;
+
+            while (Robot.opMode.opModeIsActive() && turn && (RobotMap.timer.time() < timeoutS)) {
+                double currentAngle = Robot.gyro.getAngle();
+                double error = Math.abs(currentAngle - desiredAngle);
+                //Current Error is 0 - 180
+
+                double speedChange = p * error/maxError * speed;
+                if (desiredAngle > 0)
+                    turn = currentAngle < desiredAngle;
+                else
+                    turn = currentAngle > desiredAngle;
+                move(leftPower +  negation * speedChange, rightPower + negation * speedChange);
+                Robot.gyro.print();
+                System.out.println("Gyro Angle: " + currentAngle);
+                System.out.println("Going to: " + desiredAngle);
+
+            }
             RobotMap.telemetry.update();
+            stop();
+            resetEncoders();
+            System.out.println("\n\n\n");
         }
-        stop();
-        resetEncoders();
-        System.out.println("\n\n\n");
     }
 
     /**

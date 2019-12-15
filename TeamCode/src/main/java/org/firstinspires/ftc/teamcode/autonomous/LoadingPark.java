@@ -25,9 +25,9 @@ public class LoadingPark extends LinearOpMode {
     public void run(boolean isRed) {
         Robot.driveTrain.encoderDrive(driveSpeed, 27, 27, 3);
         if (isRed) {
-            Robot.driveTrain.turn(turnSpeed, rightTurn);
+            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
         } else {
-            Robot.driveTrain.turn(turnSpeed, leftTurn);
+            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
         }
         Robot.driveTrain.encoderDrive(driveSpeed, 8, 8, 3);
 
