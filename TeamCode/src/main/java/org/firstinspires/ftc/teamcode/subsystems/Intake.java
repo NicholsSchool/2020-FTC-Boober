@@ -56,25 +56,23 @@ public class Intake extends Subsystem implements Recordable {
 
     public void timedMove(boolean intake, boolean fast, double time)
     {
-        RobotMap.timer.reset();
-        while(RobotMap.timer.time() < time)
-        {
-            if(intake)
-            {
-                if(fast)
-                    fastIntake();
-                else
-                    slowIntake();
+        if(Robot.opMode.opModeIsActive()) {
+            RobotMap.timer.reset();
+            while (Robot.opMode.opModeIsActive() && RobotMap.timer.time() < time) {
+                if (intake) {
+                    if (fast)
+                        fastIntake();
+                    else
+                        slowIntake();
+                } else {
+                    if (fast)
+                        fastOuttake();
+                    else
+                        slowOuttake();
+                }
             }
-            else
-            {
-                if(fast)
-                    fastOuttake();
-                else
-                    slowOuttake();
-            }
+            stop();
         }
-        stop();
     }
 
     @Override
