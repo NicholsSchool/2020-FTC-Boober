@@ -43,20 +43,8 @@ public class Camera {
 
     public int getSkystonePosition(boolean saveBitmaps, boolean isRed, int robotPosition)
     {
-        RobotPosition robotPositionType = RobotPosition.BLUE_POSITION1;
-        if(isRed)
-        {
-            //  robotPositionType = RobotPosition.RED_POSITION1;
-            // if(robotPosition == 2)
-//                robotPosition = RobotPosition.RED_POSITION2;
-        }
-        else
-        {
-            robotPositionType = RobotPosition.BLUE_POSITION1;
-//            if(robotPosition == 2)
-//                robotPosition = RobotPosition.BLUE_POSITION2;
-        }
-        SkystoneDetector.SkystonePosition position =  skystoneDetector.getSkystonePosition(saveBitmaps, isRed, robotPositionType);
+
+        SkystoneDetector.SkystonePosition position =  skystoneDetector.getSkystonePosition(saveBitmaps, isRed, getRobotPosition(isRed, robotPosition));
         RobotMap.telemetry.addData("Position ", position);
         switch(position)
         {
@@ -71,10 +59,34 @@ public class Camera {
         }
     }
 
+    private RobotPosition getRobotPosition(boolean isRed, int robotPosition)
+    {
+        RobotPosition robotPositionType = RobotPosition.BLUE_POSITION1;
+        if(isRed)
+        {
+            robotPositionType = RobotPosition.RED_POSITION1;
+            if(robotPosition == 2)
+                robotPositionType = RobotPosition.RED_POSITION2;
+        }
+        else
+        {
+            robotPositionType = RobotPosition.BLUE_POSITION1;
+            if(robotPosition == 2)
+                robotPositionType = RobotPosition.BLUE_POSITION2;
+        }
+        RobotMap.telemetry.addLine("Returning Position: " + robotPositionType);
+        return robotPositionType;
+    }
+
     public int getSkystonePosition(boolean isRed, int robotPosition)
     {
 
         return getSkystonePosition(false, isRed, robotPosition);
+    }
+
+    public void takePhoto(boolean isRed, int robotPosition)
+    {
+        skystoneDetector.getBitmap(true, isRed, getRobotPosition(isRed, robotPosition));
     }
 
     /**

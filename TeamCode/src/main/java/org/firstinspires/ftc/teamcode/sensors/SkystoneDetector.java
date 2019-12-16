@@ -38,7 +38,10 @@ public class SkystoneDetector {
      */
     public enum RobotPosition {
 
-        BLUE_POSITION1(658, 1070, 269, 305);
+        BLUE_POSITION1(658, 1070, 269, 305),
+        BLUE_POSITION2(658, 1070, 269, 305),
+        RED_POSITION1(658, 1070, 269, 305),
+        RED_POSITION2(658, 1070, 269, 305);
 
 
         public final int leftX, rightX, topY, bottomY;
@@ -109,7 +112,7 @@ public class SkystoneDetector {
      * @param position - the position of the robot on the field
      * @return a cropped bitmap image of the field
      */
-    private Bitmap getBitmap(boolean saveBitmaps, boolean red, RobotPosition position) {
+    public Bitmap getBitmap(boolean saveBitmaps, boolean red, RobotPosition position) {
 
         Image rgbImage = getImage();
         if(rgbImage == null)
@@ -119,13 +122,8 @@ public class SkystoneDetector {
         Bitmap bitmap = Bitmap.createBitmap(rgbImage.getWidth(), rgbImage.getHeight(), Bitmap.Config.RGB_565);
         bitmap.copyPixelsFromBuffer(rgbImage.getPixels());
 
-        String bitmapName = "BitmapBLUE.png";
-        String croppedBitmapName = "BitmapCroppedBLUE.png";
-
-        if (red) {
-            bitmapName = "BitmapRED.png";
-            croppedBitmapName = "BitmapCroppedRED.png";
-        }
+        String bitmapName = "Bitmap"+position+".png";
+        String croppedBitmapName = "BitmapCropped"+position+".png";
 
         //Save bitmap to file
         if (saveBitmaps)

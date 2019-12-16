@@ -44,8 +44,7 @@ public class DriveTrain extends Subsystem implements Recordable {
      * @param lSpeed - the speed for the left side of the robot
      * @param rSpeed - the speed for the right side of the robot
      */
-    public void move(double lSpeed, double rSpeed)
-    {
+    public void move(double lSpeed, double rSpeed) {
         lSpeed = Range.clip(lSpeed, -1, 1);
         rSpeed = Range.clip(rSpeed, -1, 1);
 
@@ -55,6 +54,7 @@ public class DriveTrain extends Subsystem implements Recordable {
 
         lSpeed *= Constants.DRIVE_BUFFER;
         rSpeed *= Constants.DRIVE_BUFFER;
+
 
        for(int i = 0; i < motors.length; i++)
            if(i < motors.length/2)
@@ -337,42 +337,45 @@ public class DriveTrain extends Subsystem implements Recordable {
     /**
      * <u>Auto Method</u>
      * Turns Robot to given angle
-     * @param speed - the speed to turn
+     * @param inputSpeed - the speed to turn
      * @param desiredAngle - the target angle
      */
-    public void turn(double speed, double desiredAngle, double timeoutS)
+    public void turn(double inputSpeed, double desiredAngle, double timeoutS)
     {
+        System.out.println("ABOUT TO TURN");
         if(Robot.opMode.opModeIsActive()) {
+            System.out.println("IN TURN CODE");
             Robot.gyro.resetAngle();
 
             double negation = 1; //turn right
             if(desiredAngle > 0)
                 negation = -1; // turn left
 
-            double leftPower = speed * negation;
-            double rightPower = -speed * negation;
 
-            move(leftPower, rightPower);
-            boolean turn = true;
             RobotMap.timer.reset();
-            double p = 0.2;
-            double maxError = 180;
-            double minSpeed = 0.3;
-
-            while (Robot.opMode.opModeIsActive() && turn && (RobotMap.timer.time() < timeoutS)) {
+            double p = 0.05, d = 0.0;
+            double minSpeed = 0.3, error = desiredAngle, prevError = error;
+            System.out.println("Going to " + desiredAngle);
+            System.out.println("Angle  ---- Left Speed");
+            while (Robot.opMode.opModeIsActive() &&  Math.abs(error) > 0.5 && (RobotMap.timer.time() < timeoutS)) {
                 double currentAngle = Robot.gyro.getAngle();
-                double error = Math.abs(currentAngle - desiredAngle);
-                //Current Error is 0 - 180
+                error = negation * (currentAngle - desiredAngle);
 
-                double speedChange = p * error/maxError * speed;
-                if (desiredAngle > 0)
-                    turn = currentAngle < desiredAngle;
-                else
-                    turn = currentAngle > desiredAngle;
-                move(leftPower +  negation * speedChange, rightPower + negation * speedChange);
+                double newSpeed = p * error + d * (prevError - error);
+                double diffInRange = Math.abs(inputSpeed - minSpeed);
+                newSpeed = Range.clip(newSpeed, -1, 1 ) * diffInRange;
+
+                prevError = error;
+
+                double finalSpeed = negation * (newSpeed  + minSpeed * (newSpeed > 0 ? 1 : -1) ) ;
+
+             //   System.out.print(RobotMap.timer.milliseconds() + " " + currentAngle + " " + finalSpeed);
+                move(finalSpeed, -finalSpeed);
+
+
                 Robot.gyro.print();
-                System.out.println("Gyro Angle: " + currentAngle);
-                System.out.println("Going to: " + desiredAngle);
+                System.out.println("\n\n");
+
 
             }
             RobotMap.telemetry.update();
@@ -498,16 +501,6 @@ public class DriveTrain extends Subsystem implements Recordable {
         else if(RobotMap.g1.dpad_down)
             isArcadeDrive = true;
 
-        System.out.println(RobotMap.lmDrive.getClass());
-        System.out.println("Front: " + RobotMap.lfDrive.getClass());
-        RobotMap.telemetry.addData("Drive Class:" , RobotMap.lmDrive.getClass());
-        RobotMap.telemetry.addData("Front Drives: ", RobotMap.lfDrive.getClass());
-        for(int i = 0; i < motors.length; i ++) {
-            if (!(motors[i] instanceof DcMotorImplEx))
-                continue;
-            DcMotorImplEx m = (DcMotorImplEx)motors[i];
-            System.out.println("Motor " + i + " PID Stuff: " +  m.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
-        }
 
     }
 

@@ -23,7 +23,7 @@ public class Teleop extends OpMode
      */
     public void init() {
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
-        Robot.driveTrain.setBrakeMode(false); //false for testing, change to true later
+        Robot.driveTrain.setBrakeMode(true);
     }
 
     @Override
@@ -93,6 +93,8 @@ public class Teleop extends OpMode
             Robot.driveTrain.resetEncoders();
         if(RobotMap.g1.y)
             Robot.gyro.resetAngle();
+        if(RobotMap.g1.x)
+            Robot.camera.takePhoto(Robot.colorPicker.isRed(), Constants.ROBOT_START_POSITION );
         Robot.gyro.print();
         RobotMap.telemetry.update();
     }

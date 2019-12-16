@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 
@@ -15,18 +16,20 @@ public class AutoTests extends LinearOpMode {
     double turnSpeed = 0.4;
     @Override
     public void runOpMode() {
-        Robot.init(hardwareMap, telemetry, gamepad1, gamepad2, this);
+        Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2, this);
 
         waitForStart();
-        Robot.driveTrain.turn(0.4, -90, 3);
-//        Robot.driveTrain.encoderDrive(0.5, 36, 36, 10);
-//        Robot.driveTrain.turn(0.4, 90, 3);
+        RobotMap.telemetry.addLine("About to run Auto Tests");
+        RobotMap.telemetry.update();
+        Robot.driveTrain.turn(turnSpeed, 90, 3); //left
+        Robot.driveTrain.encoderDrive(0.5, 36, 36, 10);
+        Robot.driveTrain.turn(turnSpeed, -90, 3); //right
         pause(10000);
     }
     public void pause(long milliseconds)
     {
         long sleepStart = System.currentTimeMillis();
-        while( milliseconds > System.currentTimeMillis() - sleepStart)
+        while( opModeIsActive() && milliseconds > System.currentTimeMillis() - sleepStart)
         { }
     }
 
