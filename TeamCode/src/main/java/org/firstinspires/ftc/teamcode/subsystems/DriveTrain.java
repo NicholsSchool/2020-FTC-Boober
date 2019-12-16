@@ -356,7 +356,6 @@ public class DriveTrain extends Subsystem implements Recordable {
             double p = 0.05, d = 0.0;
             double minSpeed = 0.3, error = desiredAngle, prevError = error;
             System.out.println("Going to " + desiredAngle);
-            System.out.println("Angle  ---- Left Speed");
             while (Robot.opMode.opModeIsActive() &&  Math.abs(error) > 0.5 && (RobotMap.timer.time() < timeoutS)) {
                 double currentAngle = Robot.gyro.getAngle();
                 error = negation * (currentAngle - desiredAngle);
@@ -371,14 +370,14 @@ public class DriveTrain extends Subsystem implements Recordable {
 
              //   System.out.print(RobotMap.timer.milliseconds() + " " + currentAngle + " " + finalSpeed);
                 move(finalSpeed, -finalSpeed);
-
+                System.out.println("Error: " + error);
 
                 Robot.gyro.print();
-                System.out.println("\n\n");
+                RobotMap.telemetry.update();
 
 
             }
-            RobotMap.telemetry.update();
+
             stop();
             resetEncoders();
             System.out.println("\n\n\n");
