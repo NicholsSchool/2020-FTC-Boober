@@ -17,4 +17,5 @@ public class Constants {
     public static boolean IN_TEST_MODE = true;
     public static double TEST_TURN_SPEED = 0.5, TEST_TURN_ANGLE = 90;
     public static int ROBOT_START_POSITION = 1;
+    public static int TEST_SKYSTONE_POSITION = 1;
 }

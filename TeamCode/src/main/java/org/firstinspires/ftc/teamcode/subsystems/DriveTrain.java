@@ -45,23 +45,29 @@ public class DriveTrain extends Subsystem implements Recordable {
      * @param rSpeed - the speed for the right side of the robot
      */
     public void move(double lSpeed, double rSpeed) {
+        move(lSpeed, rSpeed, true);
+    }
+
+    private void move(double lSpeed, double rSpeed, boolean squareMovement)
+    {
         lSpeed = Range.clip(lSpeed, -1, 1);
         rSpeed = Range.clip(rSpeed, -1, 1);
 
         // The x^2 movement Dillan wanted.
-        lSpeed *= Math.abs(lSpeed);
-        rSpeed *= Math.abs(rSpeed);
+        if(squareMovement) {
+            lSpeed *= Math.abs(lSpeed);
+            rSpeed *= Math.abs(rSpeed);
+        }
 
         lSpeed *= Constants.DRIVE_BUFFER;
         rSpeed *= Constants.DRIVE_BUFFER;
 
 
-       for(int i = 0; i < motors.length; i++)
-           if(i < motors.length/2)
-               motors[i].setPower(lSpeed);
-           else
-               motors[i].setPower(rSpeed);
-
+        for(int i = 0; i < motors.length; i++)
+            if(i < motors.length/2)
+                motors[i].setPower(lSpeed);
+            else
+                motors[i].setPower(rSpeed);
     }
 
     /**
@@ -132,6 +138,7 @@ public class DriveTrain extends Subsystem implements Recordable {
                     printEncodersInInches();
                     printEncoders();
                     RobotMap.telemetry.update();
+                Robot.gyro.testPrint();
             }
 
             // Stop all motion;
@@ -147,7 +154,7 @@ public class DriveTrain extends Subsystem implements Recordable {
 
             RobotMap.rmDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             RobotMap.rbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+            Robot.gyro.testPrint();
             //  sleep(250);   // optional pause after each move
         }
     }
@@ -356,7 +363,7 @@ public class DriveTrain extends Subsystem implements Recordable {
             double p = 0.05, d = 0.0;
             double minSpeed = 0.3, error = desiredAngle, prevError = error;
             System.out.println("Going to " + desiredAngle);
-            while (Robot.opMode.opModeIsActive() &&  Math.abs(error) > 0.5 && (RobotMap.timer.time() < timeoutS)) {
+            while (Robot.opMode.opModeIsActive() &&  Math.abs(error) > 0.3 && (RobotMap.timer.time() < timeoutS)) {
                 double currentAngle = Robot.gyro.getAngle();
                 error = negation * (currentAngle - desiredAngle);
 
@@ -368,14 +375,57 @@ public class DriveTrain extends Subsystem implements Recordable {
 
                 double finalSpeed = negation * (newSpeed  + minSpeed * (newSpeed > 0 ? 1 : -1) ) ;
 
-             //   System.out.print(RobotMap.timer.milliseconds() + " " + currentAngle + " " + finalSpeed);
+                //   System.out.print(RobotMap.timer.milliseconds() + " " + currentAngle + " " + finalSpeed);
                 move(finalSpeed, -finalSpeed);
                 System.out.println("Error: " + error);
 
                 Robot.gyro.print();
                 RobotMap.telemetry.update();
 
+                Robot.gyro.testPrint();
+            }
 
+            stop();
+            resetEncoders();
+            System.out.println("\n\n\n");
+        }
+    }
+
+    public void turnOnHeading(double inputSpeed, double desiredHeading, double timeoutS)
+    {
+        System.out.println("ABOUT TO TURN TO HEADING");
+        if(Robot.opMode.opModeIsActive()) {
+            System.out.println("IN TURN CODE");
+
+            double negation = 1; //turn right
+            if(desiredHeading - Robot.gyro.getHeading() > 0) // Check this for correctness
+                negation = -1; // turn left
+
+
+            RobotMap.timer.reset();
+            double p = 0.05, d = 0.0;
+            double minSpeed = 0.3, error = (Robot.gyro.getHeading() - desiredHeading), prevError = error;
+            System.out.println("Going to " + Robot.gyro.getHeading());
+            while (Robot.opMode.opModeIsActive() &&  Math.abs(error) > 0.3 && (RobotMap.timer.time() < timeoutS)) {
+                double currentAngle = Robot.gyro.getHeading();
+                error = negation * (currentAngle - desiredHeading);
+
+                double newSpeed = p * error + d * (prevError - error);
+                double diffInRange = Math.abs(inputSpeed - minSpeed);
+                newSpeed = Range.clip(newSpeed, -1, 1 ) * diffInRange;
+
+                prevError = error;
+
+                double finalSpeed = negation * (newSpeed  + minSpeed * (newSpeed > 0 ? 1 : -1) ) ;
+
+                //   System.out.print(RobotMap.timer.milliseconds() + " " + currentAngle + " " + finalSpeed);
+                move(finalSpeed, -finalSpeed);
+                System.out.println("Error: " + error);
+
+                Robot.gyro.print();
+                RobotMap.telemetry.update();
+
+                Robot.gyro.testPrint();
             }
 
             stop();

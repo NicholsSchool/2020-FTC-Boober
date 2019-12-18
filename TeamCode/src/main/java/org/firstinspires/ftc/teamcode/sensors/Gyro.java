@@ -55,6 +55,12 @@ public class Gyro {
         return correction;
     }
 
+    public double getHeading()
+    {
+        getAngle();
+        return lastAngles.firstAngle;
+    }
+
     /**
      * Outputs information to telemetry
      */
@@ -65,6 +71,13 @@ public class Gyro {
         RobotMap.telemetry.addData("2 global heading", globalAngle);
         RobotMap.telemetry.addData("3 correction", correction);
         RobotMap.telemetry.addData("calib", RobotMap.imu.getCalibrationStatus().toString());
+    }
+
+    public void testPrint()
+    {
+
+        getAngle();
+        System.out.println("IMU Heading: " + lastAngles.firstAngle);
     }
 
     /**

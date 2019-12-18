@@ -96,6 +96,7 @@ public class Teleop extends OpMode
         if(RobotMap.g1.x)
             Robot.camera.takePhoto(Robot.colorPicker.isRed(), Constants.ROBOT_START_POSITION );
         Robot.gyro.print();
+        Robot.gyro.testPrint();
         RobotMap.telemetry.update();
     }
 
