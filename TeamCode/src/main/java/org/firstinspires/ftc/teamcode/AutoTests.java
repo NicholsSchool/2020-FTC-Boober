@@ -22,6 +22,12 @@ public class AutoTests extends LinearOpMode {
         RobotMap.telemetry.addLine("About to run Auto Tests");
         RobotMap.telemetry.update();
 
+        Robot.driveTrain.encoderDrive(0.8,10,10,3);
+        Robot.driveTrain.encoderDrive(0.8,10,10,3);
+        pause(3000);
+        Robot.driveTrain.encoderDrive(0.8,10,10,3);
+        Robot.driveTrain.turnOnHeading(turnSpeed,90,3);
+        Robot.driveTrain.encoderDrive(0.8,10,10,3);
     }
     public void pause(long milliseconds)
     {
