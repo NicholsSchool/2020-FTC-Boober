@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.util.Robot;
 public class SkystoneGrabPos1 extends LinearOpMode {
     private double driveSpeed = 0.5, turnSpeed = 0.4,
             leftTurn = 90, rightTurn = -leftTurn;
+    private double driveTimeOut = 3, turnTimeOut = 2;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,156 +32,67 @@ public class SkystoneGrabPos1 extends LinearOpMode {
         {
             default:
             case 1:
-                newGetStone(isRed, 13.5, 52);
+                newGetStone(isRed, 13.5, 62.5);
                 break;
             case 2:
-                newGetStone(isRed, 5.5, 60);
+                newGetStone(isRed, 5.5, 68.5);
                 break;
             case 3:
                 newGetStone(isRed, -3.5, 0);
         }
     }
 
-    private void getStone(boolean isRed, double distanceForFirstStone, double distanceForSecondStone)
-    {
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, distanceForFirstStone, distanceForFirstStone,3); // This would be 5.5
-
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-
-        Robot.driveTrain.encoderDrive(driveSpeed, -6, -6, 3);
-        //claw down
-        //   Robot.claw.timedMove(false, 2);
-        Robot.driveTrain.encoderDrive(driveSpeed, 6, 6, 3);
-
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-
-
-        Robot.driveTrain.encoderDrive(driveSpeed, -(41.5 - distanceForFirstStone), -(41.5 - distanceForFirstStone), 3); // This would be 41.5 - 5.5
-        //Horizontal distance from starting to cross line is 13.5 + 28 = 41.5
-        //claw up
-
-        //For third case, stop because we can't reach the end of the field.
-        if(distanceForFirstStone == 0)
-            return;
-
-        Robot.driveTrain.encoderDrive(driveSpeed,  distanceForSecondStone, distanceForSecondStone, 3); // This would be 52 + 8
-
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        //claw down
-        //   Robot.claw.timedMove(false, 2);
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-        Robot.driveTrain.encoderDrive(driveSpeed, -distanceForSecondStone, -distanceForSecondStone, 3);
-
-    }
 
     private void newGetStone(boolean isRed, double distanceForFirstStone, double distanceForSecondStone)
     {
         if(isRed)
-            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, 3);
+            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut);
         else
-            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, 3);
+            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, distanceForFirstStone, distanceForFirstStone,3); // This would be 5.5
+        Robot.driveTrain.encoderDrive(driveSpeed, distanceForFirstStone, distanceForFirstStone,driveTimeOut); // This would be 5.5
 
-        Robot.driveTrain.turnOnHeading(turnSpeed, 0, 3);
+        Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, -6, -6, 3);
+        Robot.driveTrain.encoderDrive(driveSpeed, -6, -6, driveTimeOut);
         //claw down
         //   Robot.claw.timedMove(false, 2);
-        Robot.driveTrain.encoderDrive(driveSpeed, 6, 6, 3);
+        Robot.driveTrain.encoderDrive(driveSpeed, 6, 6, driveTimeOut);
 
         if(isRed)
-            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, 3);
+            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
         else
-            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, 3);
+            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut);
 
 
-        Robot.driveTrain.encoderDrive(driveSpeed, -(41.5 - distanceForFirstStone), -(41.5 - distanceForFirstStone), 3); // This would be 41.5 - 5.5
+        Robot.driveTrain.encoderDrive(1.0, -(50 - distanceForFirstStone), -(50 - distanceForFirstStone), driveTimeOut); // This would be 41.5 - 5.5
         //Horizontal distance from starting to cross line is 13.5 + 28 = 41.5
         //claw up
-
+        if(isRed)
+            Robot.driveTrain.turnOnHeading(turnSpeed,rightTurn, turnTimeOut);
+        else
+            Robot.driveTrain.turnOnHeading(turnSpeed,leftTurn,turnTimeOut);
         //For third case, stop because we can't reach the end of the field.
         if(distanceForFirstStone == 0)
             return;
 
-        Robot.driveTrain.encoderDrive(driveSpeed,  distanceForSecondStone, distanceForSecondStone, 3); // This would be 52 + 8
+        Robot.driveTrain.encoderDrive(1.0,  distanceForSecondStone, distanceForSecondStone, driveTimeOut); // This would be 52 + 8
 
 
-        Robot.driveTrain.turnOnHeading(turnSpeed, 0, 3);
+        Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
         //claw down
         //   Robot.claw.timedMove(false, 2);
         if(isRed)
-            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, 3);
+            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
         else
-            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, 3);
+            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, -distanceForSecondStone, -distanceForSecondStone, 3);
-
-    }
-    private void stoneOne(boolean isRed)
-    {
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        Robot.driveTrain.encoderDrive(driveSpeed, 13.5, 13.5,3); // This would be 5.5
-
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-
-        Robot.driveTrain.encoderDrive(driveSpeed, -6, -6, 3);
-        //claw down
-     //   Robot.claw.timedMove(false, 2);
-        Robot.driveTrain.encoderDrive(driveSpeed, 6, 6, 3);
-
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-
-
-        Robot.driveTrain.encoderDrive(driveSpeed, -28, -28, 3); // This would be 41.5 - 5.5
-        //Horizontal distance from starting to cross line is 13.5 + 28 = 41.5
-        //claw up
-        Robot.driveTrain.encoderDrive(driveSpeed, 52, 52, 3); // This would be 52 + 8
-
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        //claw down
-        //   Robot.claw.timedMove(false, 2);
-        if(isRed)
-            Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        else
-            Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
-        Robot.driveTrain.encoderDrive(driveSpeed, -50, -50, 3);
-
+        Robot.driveTrain.encoderDrive(1.0, -distanceForSecondStone, -distanceForSecondStone, driveTimeOut);
+// Claw move
+        Robot.driveTrain.encoderDrive(driveSpeed,7,7,driveTimeOut);
     }
 
-    private void stoneTwo(boolean isRed)
-    {}
-    private void stoneThree(boolean isRed)
-    {}
     public void pause(long milliseconds)
     {
         long sleepStart = System.currentTimeMillis();
