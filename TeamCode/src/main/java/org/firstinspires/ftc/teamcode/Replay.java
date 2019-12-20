@@ -14,10 +14,10 @@ import java.io.FileNotFoundException;
 public class Replay extends OpMode {
 
     private RecordReader reader;
-    @Override
     /**
      * Intializes the objects within the Robot class and the RecordReader instance
      */
+    @Override
     public void init() {
 
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
@@ -31,19 +31,19 @@ public class Replay extends OpMode {
 
     }
 
-    @Override
     /**
      * Has the reader read through the selected replay file
      */
+    @Override
     public void loop() {
         if(reader.isReading())
             reader.read();
     }
 
-    @Override
     /**
      * Stops reading and stops the robot
      */
+    @Override
     public void stop()
     {
         if(reader != null)

@@ -36,10 +36,10 @@ public class Elevator extends Subsystem implements Recordable {
         move(-1.0);
     }
 
-    @Override
     /**
      * The elevators's gamepad control code for teleop
      */
+    @Override
     public void run()
     {
         if(RobotMap.g2.y)
@@ -64,27 +64,27 @@ public class Elevator extends Subsystem implements Recordable {
         }
     }
 
-    @Override
     /**
      * Stops all elevator movement
      */
+    @Override
     public void stop()
     {
         move(0);
     }
 
-    @Override
     /**
      * Returns elevator values to record
      */
+    @Override
     public double[] getValues() {
         return new double[]{RobotMap.elevator.getPower()};
     }
 
-    @Override
     /**
      * Sets elevator servo to given values
      */
+    @Override
     public void setValues(double[] vals) {
        move(vals[0]);
     }

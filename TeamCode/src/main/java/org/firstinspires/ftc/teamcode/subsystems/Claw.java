@@ -54,11 +54,10 @@ public class Claw extends Subsystem implements Recordable {
         }
     }
 
-
-    @Override
     /**
      * Claw's gamepad control code for teleop
      */
+    @Override
     public void run()
     {
         if(RobotMap.g2.dpad_up )
@@ -69,27 +68,27 @@ public class Claw extends Subsystem implements Recordable {
             stop();
     }
 
-    @Override
     /**
      * Stops all claw movements
      */
+    @Override
     public void stop()
     {
         move(0);
     }
 
-    @Override
     /**
      * Returns values to record
      */
+    @Override
     public double[] getValues() {
         return new double[]{RobotMap.claw.getPower()};
     }
 
-    @Override
     /**
      * Sets the claw to the given value
      */
+    @Override
     public void setValues(double[] vals) {
         move(vals[0]);
     }

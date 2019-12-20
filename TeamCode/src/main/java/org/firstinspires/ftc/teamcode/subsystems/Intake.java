@@ -75,10 +75,10 @@ public class Intake extends Subsystem implements Recordable {
         }
     }
 
-    @Override
     /**
      * The gripper's gamepad control code for teleop
      */
+    @Override
     public void run()
     {
         if(RobotMap.g2.right_bumper)
@@ -93,27 +93,27 @@ public class Intake extends Subsystem implements Recordable {
             stop();
     }
 
-    @Override
     /**
      * Stops all gripper movements
      */
+    @Override
     public void stop()
     {
        move(0);
     }
 
-    @Override
     /**
      * Returns values to record
      */
+    @Override
     public double[] getValues() {
         return new double[]{RobotMap.lGripper.getPower(), RobotMap.rGripper.getPower()};
     }
 
-    @Override
     /**
      * Sets gripper motors to the given values.
      */
+    @Override
     public void setValues(double[] vals) {
         RobotMap.lGripper.setPower(vals[0]);
         RobotMap.lGripper.setPower(vals[1]);

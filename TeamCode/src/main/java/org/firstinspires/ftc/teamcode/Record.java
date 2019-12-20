@@ -15,10 +15,10 @@ public class Record extends OpMode {
     private RobotRecorder recorder;
     private boolean isRecording;
 
-    @Override
     /**
      * Intializes the objects within the Robot class and the RobotRecorder instance
      */
+    @Override
     public void init() {
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
         isRecording = false;
@@ -33,10 +33,10 @@ public class Record extends OpMode {
     }
 
 
-    @Override
     /**
      * Runs normal robot teleop, along with the option to record the robot's movements
      */
+    @Override
     public void loop() {
         Robot.run();
         //Click Dpad down to begin recording
@@ -82,10 +82,10 @@ public class Record extends OpMode {
     }
 
 
-    @Override
     /**
      * Stops the robot movements and the recorder if needed.
      */
+    @Override
     public void stop() {
         Robot.stop();
         if(recorder != null && !recorder.isWriterClosed())

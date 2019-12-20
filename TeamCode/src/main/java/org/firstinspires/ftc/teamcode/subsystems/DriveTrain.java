@@ -534,10 +534,10 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
-    @Override
     /**
      * DriveTrain's gamepad control code for teleop
      */
+    @Override
     public void run()
     {
         if(isArcadeDrive)
@@ -553,19 +553,19 @@ public class DriveTrain extends Subsystem implements Recordable {
 
     }
 
-    @Override
     /**
      * Stops all DriveTrain movement
      */
+    @Override
     public void stop()
     {
         move(0,0);
     }
 
-    @Override
     /**
      * Returns values to records
      */
+    @Override
     public double[] getValues() {
         double[] values = new double[motors.length];
         for(int i = 0; i < motors.length; i ++)
@@ -573,10 +573,10 @@ public class DriveTrain extends Subsystem implements Recordable {
         return values;
     }
 
-    @Override
     /**
      * Sets DriveTrain's motors to given values
      */
+    @Override
     public void setValues(double[] vals) {
         for(int i = 0; i < vals.length; i ++)
             motors[i].setPower(vals[i]);
