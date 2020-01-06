@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.Robot;
 public class SkystoneGrabPos1 extends LinearOpMode {
     private double driveSpeed = 0.5, turnSpeed = 0.4,
             leftTurn = 90, rightTurn = -leftTurn;
-    private double driveTimeOut = 3, turnTimeOut = 2;
+    private double driveTimeOut = 3, turnTimeOut = 3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,19 +32,19 @@ public class SkystoneGrabPos1 extends LinearOpMode {
         {
             default:
             case 1:
-                newGetStone(isRed, 13.5, 62.5);
+                getStone(isRed, 12.5, 62.5);
                 break;
             case 2:
-                newGetStone(isRed, 5.5, 68.5);
+                getStone(isRed, 5.5, 68.5);
                 break;
             case 3:
-                newGetStone(isRed, -3.5, 0);
+                getStone(isRed, -3.5, 0);
         }
     }
 
 
 
-    private void newGetStone(boolean isRed, double distanceForFirstStone, double distanceForSecondStone)
+    private void getStone(boolean isRed, double distanceForFirstStone, double distanceForSecondStone)
     {
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut);
@@ -57,7 +57,8 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         Robot.driveTrain.encoderDrive(driveSpeed, -6, -6, driveTimeOut);
         //claw down
-        //   Robot.claw.timedMove(false, 2);
+        Robot.claw.timedMove(false, 1);
+
         Robot.driveTrain.encoderDrive(driveSpeed, 6, 6, driveTimeOut);
 
         if(isRed)
@@ -69,6 +70,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
         Robot.driveTrain.encoderDrive(1.0, -(50 - distanceForFirstStone), -(50 - distanceForFirstStone), driveTimeOut); // This would be 41.5 - 5.5
         //Horizontal distance from starting to cross line is 13.5 + 28 = 41.5
         //claw up
+        Robot.claw.timedMove(true, 2);
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed,rightTurn, turnTimeOut);
         else
@@ -82,7 +84,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
         //claw down
-        //   Robot.claw.timedMove(false, 2);
+           Robot.claw.timedMove(false, 1);
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
         else
@@ -90,6 +92,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         Robot.driveTrain.encoderDrive(1.0, -distanceForSecondStone, -distanceForSecondStone, driveTimeOut);
 // Claw move
+        Robot.claw.timedMove(true, 2);
         Robot.driveTrain.encoderDrive(driveSpeed,7,7,driveTimeOut);
     }
 
