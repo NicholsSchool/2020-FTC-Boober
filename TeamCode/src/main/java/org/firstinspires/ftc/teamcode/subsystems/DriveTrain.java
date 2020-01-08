@@ -126,12 +126,7 @@ public class DriveTrain extends Subsystem implements Recordable {
             RobotMap.rmDrive.setPower(Math.abs(speed));
             RobotMap.rbDrive.setPower(Math.abs(speed));
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            //Note: Possibly to make this better, make each side &&
             while (Robot.opMode.opModeIsActive() && (RobotMap.timer.seconds() < timeoutS) &&
                     (RobotMap.lmDrive.isBusy() || RobotMap.lbDrive.isBusy() ||
                     RobotMap.rmDrive.isBusy() || RobotMap.rbDrive.isBusy())) {
@@ -401,37 +396,49 @@ public class DriveTrain extends Subsystem implements Recordable {
             if(desiredHeading - Robot.gyro.getHeading() > 0) // Check this for correctness
                 negation = -1; // turn left
 
-
             RobotMap.timer.reset();
-            double p = 0.05, d = 0.0;
-            double minSpeed = 0.3, error = (Robot.gyro.getHeading() - desiredHeading), prevError = error;
+            double p = 0.007, i = 0.0002, d= 0.015;
+            double minSpeed = 0.3,
+                    error = negation * (Robot.gyro.getHeading() - desiredHeading),
+                    prevError = error,
+                    sumError = 0;
             System.out.println("Going to " + Robot.gyro.getHeading());
             while (Robot.opMode.opModeIsActive() &&  Math.abs(error) > 0.3 && (RobotMap.timer.time() < timeoutS)) {
                 double currentAngle = Robot.gyro.getHeading();
                 error = negation * (currentAngle - desiredHeading);
 
-                double newSpeed = p * error + d * (prevError - error);
-                double diffInRange = Math.abs(inputSpeed - minSpeed);
-                newSpeed = Range.clip(newSpeed, -1, 1 ) * diffInRange;
+                double newSpeed = p * error + i * sumError + d * (error - prevError);
+                newSpeed = Range.clip(newSpeed, -1, 1 ) ;
+                System.out.println("Time: " + RobotMap.timer.time());
+                System.out.println("Error: " + error + " P: " + (p*error));
+                System.out.println("Derivative: " + (error - prevError) + " D: " + (d * (error - prevError)) );
+
+                System.out.println("Sum Error: " + sumError  + " I: " + (i * sumError));
 
                 prevError = error;
+                if(Math.abs(sumError + error) * i < 1)
+                    sumError += error;
 
-                double finalSpeed = negation * (newSpeed  + minSpeed * (newSpeed > 0 ? 1 : -1) ) ;
+                double finalSpeed = negation * (newSpeed) ;
 
-                //   System.out.print(RobotMap.timer.milliseconds() + " " + currentAngle + " " + finalSpeed);
-                move(finalSpeed, -finalSpeed);
-                System.out.println("Error: " + error);
+                System.out.println( " Current Angle: " + currentAngle + "\n New Speed: " + finalSpeed);
+
+                move(finalSpeed, -finalSpeed, false);
+
+
 
                 Robot.gyro.print();
                 RobotMap.telemetry.update();
 
                 Robot.gyro.testPrint();
+                System.out.println("                             \n\n");
             }
 
             stop();
             resetEncoders();
             System.out.println("\n\n\n");
         }
+        System.out.println("Final Time: " +  RobotMap.timer.milliseconds());
     }
 
     /**

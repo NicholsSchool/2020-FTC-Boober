@@ -99,11 +99,11 @@ public class Camera {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
+        parameters.cameraDirection = CameraDirection.FRONT;
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-     //   FtcDashboard.getInstance().startCameraStream(vuforia, 0);
+        FtcDashboard.getInstance().startCameraStream(vuforia, 0);
     }
 
 }
