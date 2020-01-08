@@ -55,11 +55,12 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, -6, -6, driveTimeOut);
+        double extraDistance = 4.9;
+        Robot.driveTrain.encoderDrive(driveSpeed, -extraDistance, -extraDistance, driveTimeOut);
         //claw down
         Robot.claw.timedMove(false, 1);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, 6, 6, driveTimeOut);
+        Robot.driveTrain.encoderDrive(driveSpeed, extraDistance, extraDistance, driveTimeOut);
 
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
@@ -83,8 +84,12 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
 
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
+        int extraDistance2 = 5;
+        Robot.driveTrain.encoderDrive(driveSpeed, -extraDistance2, -extraDistance2, driveTimeOut);
         //claw down
-           Robot.claw.timedMove(false, 1);
+        Robot.claw.timedMove(false, 1);
+
+        Robot.driveTrain.encoderDrive(driveSpeed, extraDistance2, extraDistance2, driveTimeOut);
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
         else

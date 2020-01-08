@@ -154,7 +154,39 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
+    public void encoderDrive2(double speed, double leftInches, double rightInches, double timeoutS)
+    {
+        if(Robot.opMode.opModeIsActive())
+        {
+           int lmTarget = RobotMap.lmDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+           int lbTarget = RobotMap.lbDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+           int rmTarget = RobotMap.rmDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+           int rbTarget = RobotMap.rbDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
 
+           boolean notAtTarget = true;
+           int tolerance = 15;
+
+           while(Robot.opMode.opModeIsActive() && notAtTarget)
+           {
+               RobotMap.lmDrive.setPower(speed);
+               RobotMap.lbDrive.setPower(speed);
+
+               RobotMap.rmDrive.setPower(speed);
+               RobotMap.rbDrive.setPower(speed);
+               notAtTarget =
+                        Math.abs(lmTarget - RobotMap.lmDrive.getCurrentPosition() ) < tolerance &&
+                        Math.abs(lbTarget - RobotMap.lbDrive.getCurrentPosition() ) < tolerance &&
+                        Math.abs(rmTarget - RobotMap.rmDrive.getCurrentPosition() ) < tolerance &&
+                        Math.abs(rbTarget - RobotMap.rbDrive.getCurrentPosition() ) < tolerance;
+           }
+
+            RobotMap.lmDrive.setPower(Math.abs(0));
+            RobotMap.lbDrive.setPower(Math.abs(0));
+
+            RobotMap.rmDrive.setPower(Math.abs(0));
+            RobotMap.rbDrive.setPower(Math.abs(0));
+        }
+    }
 
     /**
      * Turns on or off Brake ZeroPowerBehavior for the DcMotors within the DriveTrain
@@ -177,31 +209,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
-    public void testMove(double leftSpeed, double rightSpeed, double angle)
-    {
-        Robot.gyro.resetAngle();
-        move(leftSpeed, rightSpeed);
-        boolean turn = true;
-        while(Robot.opMode.opModeIsActive() && turn)
-        {
-            if(angle > 0)
-                turn = Robot.gyro.getAngle() < angle;
-            else
-                turn = Robot.gyro.getAngle() > angle;
-            Robot.gyro.print();
-            System.out.println("Gyro Angle: " + Robot.gyro.getAngle());
-            System.out.println("Going to: " + angle);
-            RobotMap.telemetry.update();
-        }
-        stop();
-        resetEncoders();
-        System.out.println("\n\n\n");
-    }
 
-    public void frontTestMove(double leftSpeed, double rightSpeed, double angle)
-    {
-        frontTestMove(leftSpeed, rightSpeed, angle, false, 0);
-    }
 
     public void frontTestMove(double leftSpeed, double rightSpeed, double angle, boolean runClaw, double moveClaw)
     {
@@ -397,7 +405,7 @@ public class DriveTrain extends Subsystem implements Recordable {
                 negation = -1; // turn left
 
             RobotMap.timer.reset();
-            double p = 0.007, i = 0.0002, d= 0.015;
+            double p = 0.006, i = 0.0000, d= 0.000;
             double minSpeed = 0.3,
                     error = negation * (Robot.gyro.getHeading() - desiredHeading),
                     prevError = error,
