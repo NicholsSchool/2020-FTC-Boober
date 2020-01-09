@@ -128,8 +128,16 @@ public class DriveTrain extends Subsystem implements Recordable {
 
             //Note: Possibly to make this better, make each side &&
             while (Robot.opMode.opModeIsActive() && (RobotMap.timer.seconds() < timeoutS) &&
-                    (RobotMap.lmDrive.isBusy() || RobotMap.lbDrive.isBusy() ||
-                    RobotMap.rmDrive.isBusy() || RobotMap.rbDrive.isBusy())) {
+                    ((RobotMap.lmDrive.isBusy() || RobotMap.lbDrive.isBusy()) &&
+                    (RobotMap.rmDrive.isBusy() || RobotMap.rbDrive.isBusy()))) {
+
+                    double test = lmTarget - RobotMap.lmDrive.getCurrentPosition();
+
+//                    RobotMap.lmDrive.setPower(Math.abs(test));
+//                    RobotMap.lbDrive.setPower(Math.abs(speed));
+//
+//                    RobotMap.rmDrive.setPower(Math.abs(speed));
+//                    RobotMap.rbDrive.setPower(Math.abs(speed));
                     printEncodersInInches();
                     printEncoders();
                     RobotMap.telemetry.update();
@@ -174,10 +182,15 @@ public class DriveTrain extends Subsystem implements Recordable {
                RobotMap.rmDrive.setPower(speed);
                RobotMap.rbDrive.setPower(speed);
                notAtTarget =
-                        Math.abs(lmTarget - RobotMap.lmDrive.getCurrentPosition() ) < tolerance &&
-                        Math.abs(lbTarget - RobotMap.lbDrive.getCurrentPosition() ) < tolerance &&
-                        Math.abs(rmTarget - RobotMap.rmDrive.getCurrentPosition() ) < tolerance &&
-                        Math.abs(rbTarget - RobotMap.rbDrive.getCurrentPosition() ) < tolerance;
+                       (lmTarget - RobotMap.lmDrive.getCurrentPosition()  > tolerance ||
+                        lbTarget - RobotMap.lbDrive.getCurrentPosition()  > tolerance) ||
+                       (rmTarget - RobotMap.rmDrive.getCurrentPosition()  > tolerance ||
+                        rbTarget - RobotMap.rbDrive.getCurrentPosition()  > tolerance);
+               printEncodersInInches();
+               printEncoders();
+               RobotMap.telemetry.addData("Not At Target ", notAtTarget);
+               RobotMap.telemetry.addData("LM ", lmTarget - RobotMap.lmDrive.getCurrentPosition());
+               RobotMap.telemetry.update();
            }
 
             RobotMap.lmDrive.setPower(Math.abs(0));
@@ -516,7 +529,7 @@ public class DriveTrain extends Subsystem implements Recordable {
             if(!(motors[i] instanceof  DcMotor))
                 continue;
             DcMotor m = (DcMotor) motors[i];
-            RobotMap.telemetry.addData("Encoder i ", m.getCurrentPosition());
+            RobotMap.telemetry.addData("Encoder " + i, m.getCurrentPosition());
         }
     }
 
@@ -527,7 +540,7 @@ public class DriveTrain extends Subsystem implements Recordable {
             if(!(motors[i] instanceof  DcMotor))
                 continue;
             DcMotor m = (DcMotor) motors[i];
-            RobotMap.telemetry.addData("Inches Encoder i ", m.getCurrentPosition()/COUNTS_PER_INCH);
+            RobotMap.telemetry.addData("Inches Encoder " + i, m.getCurrentPosition()/COUNTS_PER_INCH);
         }
     }
 

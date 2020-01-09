@@ -23,6 +23,7 @@ public class Robot {
     public static Claw claw;
     public static Camera camera;
     public static Gyro gyro;
+    public static DistanceSensor distanceSensor;
     public static LinearOpMode opMode;
     public static ColorPicker colorPicker;
     public static String filePath;
@@ -47,6 +48,7 @@ public class Robot {
         camera = new Camera();
         gyro = new Gyro();
         colorPicker = new ColorPicker();
+        distanceSensor = new DistanceSensor();
         filePath = Environment.getExternalStorageDirectory().getPath();
         fileName = "SimpleBuildSide";
     }
