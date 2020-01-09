@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
+import org.firstinspires.ftc.teamcode.util.RobotMap;
 
 @Autonomous(name="Skystone From Position 1", group="Loading Zone Autos")
 public class SkystoneGrabPos1 extends LinearOpMode {
@@ -14,7 +16,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot.init(hardwareMap, telemetry, gamepad1, gamepad2, this);
+        Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2, this);
         Robot.driveTrain.setBrakeMode(false);
         boolean isRed = Robot.colorPicker.isRed();
         int skyStonePosition = Constants.TEST_SKYSTONE_POSITION;
@@ -55,11 +57,16 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, -6, -6, driveTimeOut);
+        double extraDistance = Robot.distanceSensor.get() -4;
+        RobotMap.telemetry.addData("DISTANCE", extraDistance);
+        System.out.println("Distance: " + extraDistance);
+        pause(2000);
+
+        Robot.driveTrain.encoderDrive(driveSpeed, -extraDistance, -extraDistance, driveTimeOut);
         //claw down
         Robot.claw.timedMove(false, 1);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, 6, 6, driveTimeOut);
+        Robot.driveTrain.encoderDrive(driveSpeed, extraDistance, extraDistance, driveTimeOut);
 
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
@@ -83,8 +90,12 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
 
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
+        double extraDistance2 = Robot.distanceSensor.get() -4;
+        Robot.driveTrain.encoderDrive(driveSpeed, -extraDistance2, -extraDistance2, driveTimeOut);
         //claw down
-           Robot.claw.timedMove(false, 1);
+        Robot.claw.timedMove(false, 1);
+
+        Robot.driveTrain.encoderDrive(driveSpeed, extraDistance2, extraDistance2, driveTimeOut);
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
         else

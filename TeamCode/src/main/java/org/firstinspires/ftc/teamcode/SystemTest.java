@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,10 +12,10 @@ import org.firstinspires.ftc.teamcode.util.RobotMap;
 public class SystemTest extends OpMode {
     @Override
     public void init() {
-        Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
+        Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2);
         Robot.driveTrain.setBrakeMode(true);
     }
-
+    int skystonePos = 0;
     @Override
     public void loop() {
         double power = 0.5;
@@ -75,15 +76,22 @@ public class SystemTest extends OpMode {
         }
 
 
-        Robot.driveTrain.printEncoders();
+
         if(RobotMap.g1.dpad_up)
             Robot.driveTrain.resetEncoders();
         if(RobotMap.g1.dpad_down)
             Robot.gyro.resetAngle();
         if(RobotMap.g1.dpad_left)
             Robot.camera.takePhoto(Robot.colorPicker.isRed(), Constants.ROBOT_START_POSITION );
+        if(RobotMap.g1.dpad_right) {
+            skystonePos = Robot.camera.getSkystonePosition(Robot.colorPicker.isRed(), Constants.ROBOT_START_POSITION);
+            System.out.println("Skystone Position: " + skystonePos);
+        }
+        RobotMap.telemetry.addData("Skystone Position", skystonePos);
+        Robot.driveTrain.printEncoders();
         Robot.gyro.print();
         Robot.gyro.testPrint();
+        Robot.distanceSensor.print();
         RobotMap.telemetry.update();
     }
     public void stop() {

@@ -23,10 +23,10 @@ public class AutoTests extends LinearOpMode {
         RobotMap.telemetry.update();
 
         Robot.driveTrain.encoderDrive(0.8,20,20,3);
-//
-       Robot.driveTrain.turnOnHeading(turnSpeed,90,3);
+
+//       Robot.driveTrain.turnOnHeading(turnSpeed,90,2);
 //        pause(3000);
-//        Robot.driveTrain.turnOnHeading(turnSpeed,90,3);
+//        Robot.driveTrain.turnOnHeading(turnSpeed,0,2);
     }
     public void pause(long milliseconds)
     {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -26,6 +27,7 @@ public class RobotMap {
     public static DcMotorSimple lGripper, rGripper;
     public static CRServo elevator;
     public static TouchSensor intakeTouchSensor;
+    public static Rev2mDistanceSensor distanceSensor;
     public static ColorSensor rColorSensor, lColorSensor;
     public static AnalogInput colorDial;
     public static CRServo claw;
@@ -60,6 +62,7 @@ public class RobotMap {
         claw = hw.get(CRServo.class, "Claw");
 
         intakeTouchSensor = hw.get(TouchSensor.class,"TouchSensor");
+        distanceSensor = hw.get(Rev2mDistanceSensor.class, "DistanceSensor");
         rColorSensor = hw.get(ColorSensor.class, "RColorSensor");
         lColorSensor = hw.get(ColorSensor.class, "LColorSensor");
 
