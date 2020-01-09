@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.autonomous.Function;
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
@@ -96,6 +97,14 @@ public class DriveTrain extends Subsystem implements Recordable {
      */
     public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS)
     {
+        encoderDrive(speed, leftInches, rightInches, timeoutS, new Function() {
+            public void execute(){}
+            public void stop(){}
+        });
+    }
+
+    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS, Function f)
+    {
         int lmTarget, lbTarget, rmTarget, rbTarget;
 
         // Ensure that the opmode is still active
@@ -129,21 +138,22 @@ public class DriveTrain extends Subsystem implements Recordable {
             //Note: Possibly to make this better, make each side &&
             while (Robot.opMode.opModeIsActive() && (RobotMap.timer.seconds() < timeoutS) &&
                     ((RobotMap.lmDrive.isBusy() || RobotMap.lbDrive.isBusy()) &&
-                    (RobotMap.rmDrive.isBusy() || RobotMap.rbDrive.isBusy()))) {
+                            (RobotMap.rmDrive.isBusy() || RobotMap.rbDrive.isBusy()))) {
 
-                    double test = lmTarget - RobotMap.lmDrive.getCurrentPosition();
+                f.execute();
+                double test = lmTarget - RobotMap.lmDrive.getCurrentPosition();
 
 //                    RobotMap.lmDrive.setPower(Math.abs(test));
 //                    RobotMap.lbDrive.setPower(Math.abs(speed));
 //
 //                    RobotMap.rmDrive.setPower(Math.abs(speed));
 //                    RobotMap.rbDrive.setPower(Math.abs(speed));
-                    printEncodersInInches();
-                    printEncoders();
-                    RobotMap.telemetry.update();
+                printEncodersInInches();
+                printEncoders();
+                RobotMap.telemetry.update();
                 Robot.gyro.testPrint();
             }
-
+            f.stop();
             // Stop all motion;
             RobotMap.lmDrive.setPower(Math.abs(0));
             RobotMap.lbDrive.setPower(Math.abs(0));
