@@ -40,7 +40,7 @@ public class SkystoneDetector {
 
         BLUE_POSITION1(138, 604, 506, 632),
         BLUE_POSITION2(658, 1070, 269, 305),
-        RED_POSITION1(658, 1070, 269, 305),
+        RED_POSITION1(638, 1121, 525, 645),
         RED_POSITION2(658, 1070, 269, 305);
 
 

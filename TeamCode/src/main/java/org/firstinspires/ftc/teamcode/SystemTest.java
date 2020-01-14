@@ -91,7 +91,8 @@ public class SystemTest extends OpMode {
         Robot.driveTrain.printEncoders();
         Robot.gyro.print();
         Robot.gyro.testPrint();
-        Robot.distanceSensor.print();
+        Robot.backDistanceSensor.print();
+        Robot.frontDistanceSensor.print();
         RobotMap.telemetry.update();
     }
     public void stop() {

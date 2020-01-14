@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -26,8 +25,7 @@ public class RobotMap {
     public static DcMotorSimple lfDrive, rfDrive;
     public static DcMotorSimple lGripper, rGripper;
     public static CRServo elevator;
-    public static TouchSensor intakeTouchSensor;
-    public static Rev2mDistanceSensor distanceSensor;
+    public static Rev2mDistanceSensor backDistanceSensor, frontDistanceSensor;
     public static ColorSensor rColorSensor, lColorSensor;
     public static AnalogInput colorDial;
     public static CRServo claw;
@@ -61,8 +59,8 @@ public class RobotMap {
 
         claw = hw.get(CRServo.class, "Claw");
 
-        intakeTouchSensor = hw.get(TouchSensor.class,"TouchSensor");
-        distanceSensor = hw.get(Rev2mDistanceSensor.class, "DistanceSensor");
+        backDistanceSensor = hw.get(Rev2mDistanceSensor.class, "DistanceSensor");
+        frontDistanceSensor = hw.get(Rev2mDistanceSensor.class, "FrontDistanceSensor");
         rColorSensor = hw.get(ColorSensor.class, "RColorSensor");
         lColorSensor = hw.get(ColorSensor.class, "LColorSensor");
 

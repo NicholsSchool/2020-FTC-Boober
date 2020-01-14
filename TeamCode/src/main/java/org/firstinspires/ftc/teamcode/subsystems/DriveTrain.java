@@ -419,6 +419,20 @@ public class DriveTrain extends Subsystem implements Recordable {
 
     public void turnOnHeading(double inputSpeed, double desiredHeading, double timeoutS)
     {
+        turnOnHeading(inputSpeed, desiredHeading, timeoutS, new Function() {
+            @Override
+            public void execute() {
+
+            }
+            @Override
+            public void stop() {
+
+            }
+        });
+    }
+
+    public void turnOnHeading(double inputSpeed, double desiredHeading, double timeoutS, Function f)
+    {
         System.out.println("ABOUT TO TURN TO HEADING");
         if(Robot.opMode.opModeIsActive()) {
             System.out.println("IN TURN CODE");
@@ -455,7 +469,7 @@ public class DriveTrain extends Subsystem implements Recordable {
                 System.out.println( " Current Angle: " + currentAngle + "\n New Speed: " + finalSpeed);
 
                 move(finalSpeed, -finalSpeed, false);
-
+                f.execute();
 
 
                 Robot.gyro.print();
@@ -465,6 +479,7 @@ public class DriveTrain extends Subsystem implements Recordable {
                 System.out.println("                             \n\n");
             }
 
+            f.stop();
             stop();
             resetEncoders();
             System.out.println("\n\n\n");
