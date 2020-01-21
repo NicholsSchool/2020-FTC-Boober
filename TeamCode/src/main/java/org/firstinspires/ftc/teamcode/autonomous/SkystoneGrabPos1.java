@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
@@ -13,7 +14,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
             leftTurn = 90, rightTurn = -leftTurn;
     private double driveTimeOut = 3, turnTimeOut = 2;
     private double skystoneLength = 8;
-    private double distanceFromStone = 4.5, distanceAwayFromStone = 5;
+    private double distanceFromStone = 3.5, distanceAwayFromStone = 5;
     private double secondStoneDriveForward = 30;
 
     Function clawDown = new Function() {
@@ -38,7 +39,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
     private void run(boolean isRed, int skyStonePos)
     {
-        Robot.driveTrain.encoderDrive(driveSpeed,   -23.5, -23.5, 3);
+        Robot.driveTrain.encoderDrive(driveSpeed,   -24, -24, 3);
 
         getStone(isRed, skyStonePos );
     }
@@ -78,11 +79,11 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
     private void getFirstStone(boolean isRed, int skystonePos)
     {
-        pause(500);
         double distanceForFirstStone = getDistanceFromWall(skystonePos, true);
 
         Robot.driveTrain.encoderDrive(driveSpeed, distanceForFirstStone, distanceForFirstStone,driveTimeOut);
 
+        getDistanceFromWall(skystonePos, true);
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
 
         pause(500);
@@ -111,6 +112,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
 
+        pause(500);
         double extraDistance = Robot.backDistanceSensor.get() - distanceFromStone;
         Robot.driveTrain.encoderDrive(0.25, -extraDistance, -extraDistance, driveTimeOut);
         //claw down
@@ -136,6 +138,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
         if(!isFirst)
             numSkystones = 3;
 
+
         double desiredDistanceFromWall = (numSkystones - skystonePos) * skystoneLength - turnGap;
         double currentDistanceFromWall;
         pause(500);
@@ -146,8 +149,10 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         RobotMap.telemetry.addData("Distance from Wall As Detected", currentDistanceFromWall);
         RobotMap.telemetry.addData("The Desired Distance From Wall", desiredDistanceFromWall);
+        RobotMap.telemetry.addData("Distance going to drive", (desiredDistanceFromWall - currentDistanceFromWall));
         RobotMap.telemetry.update();
-      //  pauseTillButtonPressed();
+        pause(5000);
+        //   pauseTillButtonPressed();
         return desiredDistanceFromWall - currentDistanceFromWall;
     }
 

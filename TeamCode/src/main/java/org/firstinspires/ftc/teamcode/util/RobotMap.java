@@ -80,7 +80,6 @@ public class RobotMap {
         g2 = gamepad2;
 
 
-
         lGripper.setDirection(DcMotorSimple.Direction.REVERSE);
         rGripper.setDirection(DcMotorSimple.Direction.REVERSE);
 
