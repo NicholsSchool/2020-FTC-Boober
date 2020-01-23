@@ -64,8 +64,8 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
 
         //For third case, just park because we can't reach the end of the field.
-        if(skystonePos == 3) {
-            Robot.driveTrain.encoderDrive(driveSpeed, 7, 7, driveTimeOut);
+        if(skystonePos > 0) {
+            Robot.driveTrain.encoderDrive(driveSpeed, 9, 9, driveTimeOut);
             return;
         }
 
@@ -83,17 +83,24 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         Robot.driveTrain.encoderDrive(driveSpeed, distanceForFirstStone, distanceForFirstStone,driveTimeOut);
 
-        getDistanceFromWall(skystonePos, true);
+
+        //Do it once more because we aren't going for second stone and have the time to adjust.
+        distanceForFirstStone = getDistanceFromWall(skystonePos, true);
+        Robot.driveTrain.encoderDrive(driveSpeed, distanceForFirstStone, distanceForFirstStone,driveTimeOut);
+
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
 
         pause(500);
         double extraDistance = Robot.backDistanceSensor.get() - distanceFromStone;
+        Robot.driveTrain.encoderDrive(0.25, -extraDistance, -extraDistance, driveTimeOut);
 
+        pause(500);
+        extraDistance = Robot.backDistanceSensor.get() - distanceFromStone;
         Robot.driveTrain.encoderDrive(0.25, -extraDistance, -extraDistance, driveTimeOut);
 
         Robot.claw.timedMove(false, 1);
 
-        Robot.driveTrain.encoderDrive(driveSpeed, distanceAwayFromStone, distanceAwayFromStone, driveTimeOut, clawDown);
+        Robot.driveTrain.encoderDrive(driveSpeed/3, distanceAwayFromStone, distanceAwayFromStone, driveTimeOut, clawDown);
 
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut, clawDown);
@@ -130,9 +137,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
     private double getDistanceFromWall(int skystonePos, boolean isFirst)
     {
-        double turnGap = 3;
-        if(skystonePos == 2)
-            turnGap = 3.5;
+        double turnGap = 3.5;
 
         int numSkystones = 6;
         if(!isFirst)
@@ -151,7 +156,6 @@ public class SkystoneGrabPos1 extends LinearOpMode {
         RobotMap.telemetry.addData("The Desired Distance From Wall", desiredDistanceFromWall);
         RobotMap.telemetry.addData("Distance going to drive", (desiredDistanceFromWall - currentDistanceFromWall));
         RobotMap.telemetry.update();
-        pause(5000);
         //   pauseTillButtonPressed();
         return desiredDistanceFromWall - currentDistanceFromWall;
     }

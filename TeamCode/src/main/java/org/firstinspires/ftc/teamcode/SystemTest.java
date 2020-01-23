@@ -75,7 +75,7 @@ public class SystemTest extends OpMode {
             RobotMap.telemetry.addLine("ALL MOTORS STOPPED");
         }
 
-       // RobotMap.rbDrive.setPower(0.5);
+      //   RobotMap.lmDrive.setPower(0.5);
 
         if(RobotMap.g1.dpad_up)
             Robot.driveTrain.resetEncoders();
