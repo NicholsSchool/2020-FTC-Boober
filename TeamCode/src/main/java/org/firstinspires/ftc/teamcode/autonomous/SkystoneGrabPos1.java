@@ -24,7 +24,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2, this);
+        Robot.init(hardwareMap,telemetry, gamepad1, gamepad2, this);
         Robot.driveTrain.setBrakeMode(false);
         boolean isRed = Robot.colorPicker.isRed();
         int skyStonePosition = 0;
@@ -167,10 +167,4 @@ public class SkystoneGrabPos1 extends LinearOpMode {
         { }
     }
 
-    //ONLY FOR TESTING!!!!
-    public void pauseTillButtonPressed()
-    {
-        while(opModeIsActive() && !RobotMap.g1.a)
-        {}
-    }
 }

@@ -141,13 +141,6 @@ public class DriveTrain extends Subsystem implements Recordable {
                             (RobotMap.rmDrive.isBusy() || RobotMap.rbDrive.isBusy()))) {
 
                 f.execute();
-                double test = lmTarget - RobotMap.lmDrive.getCurrentPosition();
-
-//                    RobotMap.lmDrive.setPower(Math.abs(test));
-//                    RobotMap.lbDrive.setPower(Math.abs(speed));
-//
-//                    RobotMap.rmDrive.setPower(Math.abs(speed));
-//                    RobotMap.rbDrive.setPower(Math.abs(speed));
                 printEncodersInInches();
                 printEncoders();
                 RobotMap.telemetry.update();
@@ -168,46 +161,94 @@ public class DriveTrain extends Subsystem implements Recordable {
             RobotMap.rmDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             RobotMap.rbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             Robot.gyro.testPrint();
-            //  sleep(250);   // optional pause after each move
         }
     }
 
-    public void encoderDrive2(double speed, double leftInches, double rightInches, double timeoutS)
+
+
+    //The difference between this and encoderDrive is that this one keeps running until both sides of drivetrain
+    //have finished moving, not just one
+    public void firmEncoderDrive(double speed, double leftInches, double rightInches, double timeoutS, Function f)
     {
-        if(Robot.opMode.opModeIsActive())
-        {
-           int lmTarget = RobotMap.lmDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-           int lbTarget = RobotMap.lbDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-           int rmTarget = RobotMap.rmDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-           int rbTarget = RobotMap.rbDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+        int lmTarget, lbTarget, rmTarget, rbTarget;
 
-           boolean notAtTarget = true;
-           int tolerance = 15;
+        // Ensure that the opmode is still active
+        if (Robot.opMode.opModeIsActive()) {
+            resetEncoders();
+            // Determine new target position, and pass to motor controller
+            lmTarget = RobotMap.lmDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            lbTarget = RobotMap.lbDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            rmTarget = RobotMap.rmDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            rbTarget = RobotMap.rbDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            RobotMap.lmDrive.setTargetPosition(lmTarget);
+            RobotMap.lbDrive.setTargetPosition(lbTarget);
+            RobotMap.rmDrive.setTargetPosition(rmTarget);
+            RobotMap.rbDrive.setTargetPosition(rbTarget);
 
-           while(Robot.opMode.opModeIsActive() && notAtTarget)
-           {
-               RobotMap.lmDrive.setPower(speed);
-               RobotMap.lbDrive.setPower(speed);
+            // Turn On RUN_TO_POSITION
+            RobotMap.lmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RobotMap.lbDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-               RobotMap.rmDrive.setPower(speed);
-               RobotMap.rbDrive.setPower(speed);
-               notAtTarget =
-                       (lmTarget - RobotMap.lmDrive.getCurrentPosition()  > tolerance ||
-                        lbTarget - RobotMap.lbDrive.getCurrentPosition()  > tolerance) ||
-                       (rmTarget - RobotMap.rmDrive.getCurrentPosition()  > tolerance ||
-                        rbTarget - RobotMap.rbDrive.getCurrentPosition()  > tolerance);
-               printEncodersInInches();
-               printEncoders();
-               RobotMap.telemetry.addData("Not At Target ", notAtTarget);
-               RobotMap.telemetry.addData("LM ", lmTarget - RobotMap.lmDrive.getCurrentPosition());
-               RobotMap.telemetry.update();
-           }
+            RobotMap.rmDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RobotMap.rbDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            // reset the timeout time and start motion.
+            RobotMap.timer.reset();
+            RobotMap.lmDrive.setPower(Math.abs(speed));
+            RobotMap.lbDrive.setPower(Math.abs(speed));
+
+            RobotMap.rmDrive.setPower(Math.abs(speed));
+            RobotMap.rbDrive.setPower(Math.abs(speed));
+
+            // the or after the lbdrive, is the difference between this and encoderDrive
+            while (Robot.opMode.opModeIsActive() && (RobotMap.timer.seconds() < timeoutS) &&
+                    ((RobotMap.lmDrive.isBusy() || RobotMap.lbDrive.isBusy()) ||
+                            (RobotMap.rmDrive.isBusy() || RobotMap.rbDrive.isBusy()))) {
+
+                f.execute();
+                printEncodersInInches();
+                printEncoders();
+                RobotMap.telemetry.update();
+                Robot.gyro.testPrint();
+            }
+            f.stop();
+            // Stop all motion;
             RobotMap.lmDrive.setPower(Math.abs(0));
             RobotMap.lbDrive.setPower(Math.abs(0));
 
             RobotMap.rmDrive.setPower(Math.abs(0));
             RobotMap.rbDrive.setPower(Math.abs(0));
+
+            // Turn off RUN_TO_POSITION
+            RobotMap.lmDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RobotMap.lbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            RobotMap.rmDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RobotMap.rbDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Robot.gyro.testPrint();
+        }
+    }
+
+    public void driveAndTurn(double leftSpeed, double rightSpeed, double desiredHeading, double timeoutS, Function f)
+    {
+        if(Robot.opMode.opModeIsActive()) {
+            RobotMap.lfDrive.setPower(leftSpeed);
+            RobotMap.lmDrive.setPower(leftSpeed);
+            RobotMap.rfDrive.setPower(rightSpeed);
+            RobotMap.rbDrive.setPower(rightSpeed);
+            RobotMap.timer.reset();
+            boolean turn = true;
+            double error = (Robot.gyro.getHeading() - desiredHeading);
+            while (Robot.opMode.opModeIsActive() && Math.abs(error) > 0.3  && (RobotMap.timer.time() < timeoutS)) {
+
+                Robot.gyro.print();
+                RobotMap.telemetry.update();
+                f.execute();
+            }
+            f.stop();
+            stop();
+            resetEncoders();
+            System.out.println("\n\n\n");
         }
     }
 
@@ -326,46 +367,7 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
-    /**
-     * <u>Auto Method</u>
-     * Turns to angle and self-corrects based on PID
-     * <i>Currently In Testing Phase (Not Working)</i>
-     * @param speed - the max speed to move at
-     * @param angle - the target angle
-     */
-    public void PIDTurn(double speed, double angle)
-    {
-        Robot.gyro.resetAngle();
-        PIDController turnControl = new PIDController(0.003, 0, 0);
-        turnControl.reset();
-        turnControl.setInputRange(0, angle);
-        turnControl.setOutputRange(0, speed);
-        turnControl.setTolerance(1);
-        turnControl.enable();
 
-        double negation = 1;
-        if(angle < 0)
-            negation = -1;
-        RobotMap.telemetry.addData("PID TURN",turnControl.onTarget());
-        while(Robot.opMode.opModeIsActive() && !turnControl.onTarget())
-        {
-            double power = turnControl.performPID(Robot.gyro.getAngle());
-            move(negation * power, -negation * power);
-            Robot.gyro.print();
-            RobotMap.telemetry.update();
-        }
-        stop();
-    }
-
-    public void timedMove(double speed, double time)
-    {
-        RobotMap.timer.reset();
-        while(RobotMap.timer.time() < time && Robot.opMode.opModeIsActive())
-        {
-           move(speed, speed);
-        }
-        stop();
-    }
 
     /**
      * <u>Auto Method</u>

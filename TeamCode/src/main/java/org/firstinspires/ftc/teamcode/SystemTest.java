@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.util.RobotMap;
 public class SystemTest extends OpMode {
     @Override
     public void init() {
-        Robot.init(hardwareMap, FtcDashboard.getInstance().getTelemetry(), gamepad1, gamepad2);
+        Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
         Robot.driveTrain.setBrakeMode(true);
     }
     int skystonePos = 0;
@@ -88,6 +88,7 @@ public class SystemTest extends OpMode {
             System.out.println("Skystone Position: " + skystonePos);
         }
         RobotMap.telemetry.addData("Skystone Position", skystonePos);
+        RobotMap.telemetry.addData("Color Sensor, isRed", Robot.colorPicker.isRed());
         Robot.driveTrain.printEncoders();
         Robot.gyro.print();
         Robot.gyro.testPrint();

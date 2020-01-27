@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -74,7 +75,10 @@ public class RobotMap {
 
         timer = new ElapsedTime();
 
-        telemetry = t;
+        if(FtcDashboard.getInstance() != null)
+            telemetry = FtcDashboard.getInstance().getTelemetry();
+        else
+            telemetry = t;
 
         g1 = gamepad1;
         g2 = gamepad2;
