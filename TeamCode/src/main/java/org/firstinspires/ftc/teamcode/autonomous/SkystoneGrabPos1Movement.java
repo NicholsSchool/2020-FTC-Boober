@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 
-@Autonomous(name="Skystone From Position 1", group="Loading Zone Autos")
-public class SkystoneGrabPos1 extends LinearOpMode {
+
+public class SkystoneGrabPos1Movement {
     private double driveSpeed = 0.5, turnSpeed = 0.4,
             leftTurn = 90, rightTurn = -leftTurn;
     private double driveTimeOut = 3, turnTimeOut = 2;
@@ -22,15 +22,22 @@ public class SkystoneGrabPos1 extends LinearOpMode {
         public void stop(){Robot.claw.stop();}
     };
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        Robot.init(hardwareMap,telemetry, gamepad1, gamepad2, this);
+    public void setDistanceAwayFromStone(double distance)
+    {
+        distanceAwayFromStone = distance;
+    }
+
+    public void runMovement() throws InterruptedException {
+
         Robot.driveTrain.setBrakeMode(false);
         boolean isRed = Robot.colorPicker.isRed();
         int skyStonePosition = 0;
-        while(!isStarted())
+        while(!Robot.opMode.isStarted()) {
             skyStonePosition = Robot.camera.getSkystonePosition(isRed, 1);
-        waitForStart();
+            RobotMap.telemetry.addData("Skystone Position", skyStonePosition);
+            RobotMap.telemetry.update();
+        }
+        Robot.opMode.waitForStart();
         long startTime = System.currentTimeMillis();
         run(Robot.colorPicker.isRed(), skyStonePosition);
         RobotMap.telemetry.addData("TIME TAKEN", (System.currentTimeMillis() - startTime)/1000);
@@ -74,7 +81,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
         getSecondStone(isRed, skystonePos);
 
         Robot.claw.timedMove(true, 2);
-        Robot.driveTrain.encoderDrive(driveSpeed,7,7,driveTimeOut);
+        Robot.driveTrain.encoderDrive(driveSpeed,18,18,driveTimeOut);
     }
 
     private void getFirstStone(boolean isRed, int skystonePos)
@@ -92,11 +99,11 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
         pause(500);
         double extraDistance = Robot.backDistanceSensor.get() - distanceFromStone;
-        Robot.driveTrain.encoderDrive(0.25, -extraDistance, -extraDistance, driveTimeOut);
+        Robot.driveTrain.encoderDrive(0.25, - extraDistance, -extraDistance, driveTimeOut);
 
         pause(500);
         extraDistance = Robot.backDistanceSensor.get() - distanceFromStone;
-        Robot.driveTrain.encoderDrive(0.25, -extraDistance, -extraDistance, driveTimeOut);
+        Robot.driveTrain.encoderDrive(0.25, - extraDistance, -extraDistance, driveTimeOut);
 
         Robot.claw.timedMove(false, 1);
 
@@ -108,7 +115,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
             Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut, clawDown);
 
 
-        Robot.driveTrain.encoderDrive(1.0, -(52 - distanceForFirstStone), -(52 - distanceForFirstStone), driveTimeOut);
+        Robot.driveTrain.encoderDrive(1.0, -(60 - distanceForFirstStone), -(60 - distanceForFirstStone), driveTimeOut);
     }
 
     private void getSecondStone(boolean isRed, int skystonePos)
@@ -137,7 +144,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
 
     private double getDistanceFromWall(int skystonePos, boolean isFirst)
     {
-        double turnGap = 3.5;
+        double turnGap = 4.5;
 
         int numSkystones = 6;
         if(!isFirst)
@@ -163,7 +170,7 @@ public class SkystoneGrabPos1 extends LinearOpMode {
     public void pause(long milliseconds)
     {
         long sleepStart = System.currentTimeMillis();
-        while( opModeIsActive() && milliseconds > System.currentTimeMillis() - sleepStart)
+        while( Robot.opMode.opModeIsActive() && milliseconds > System.currentTimeMillis() - sleepStart)
         { }
     }
 
