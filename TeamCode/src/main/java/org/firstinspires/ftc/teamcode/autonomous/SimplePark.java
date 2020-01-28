@@ -22,7 +22,7 @@ public class SimplePark extends LinearOpMode {
 
     public void run(boolean isRed) {
         new FaceBuildZone(driveSpeed, turnSpeed, leftTurn, rightTurn).run(isRed);
-        Robot.driveTrain.halfEncoderDrive(driveSpeed, 33, 33);
+        Robot.driveTrain.encoderDrive(driveSpeed, 33, 33, 3);
 
     }
 }

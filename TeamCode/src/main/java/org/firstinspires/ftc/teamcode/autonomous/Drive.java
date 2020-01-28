@@ -18,8 +18,7 @@ public class Drive extends LinearOpMode {
     }
 
     public void run(boolean isRed) {
-        Robot.driveTrain.halfEncoderDrive(driveSpeed, 10, 10);
-
+        Robot.driveTrain.encoderDrive(driveSpeed, 10, 10, 3);
 
     }
 }

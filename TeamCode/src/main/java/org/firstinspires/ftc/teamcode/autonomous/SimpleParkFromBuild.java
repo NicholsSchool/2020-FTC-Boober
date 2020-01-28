@@ -18,12 +18,12 @@ public class SimpleParkFromBuild extends LinearOpMode {
     }
 
     public void run(boolean isRed) {
-        Robot.driveTrain.halfEncoderDrive(driveSpeed, 18, 18);
+        Robot.driveTrain.encoderDrive(driveSpeed, 18, 18, 3);
         if(isRed)
             Robot.driveTrain.turn(turnSpeed, leftTurn, 3);
         else
             Robot.driveTrain.turn(turnSpeed, rightTurn, 3);
-        Robot.driveTrain.halfEncoderDrive(driveSpeed, 4, 4);
+        Robot.driveTrain.encoderDrive(driveSpeed, 4, 4, 3);
 
     }
 }
