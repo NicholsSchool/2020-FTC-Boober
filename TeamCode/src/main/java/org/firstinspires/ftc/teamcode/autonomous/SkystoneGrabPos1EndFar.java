@@ -14,5 +14,6 @@ public class SkystoneGrabPos1EndFar extends LinearOpMode {
         Robot.init(hardwareMap,telemetry, gamepad1, gamepad2, this);
         SkystoneGrabPos1Movement movement = new SkystoneGrabPos1Movement();
         movement.runMovement();
+
     }
 }

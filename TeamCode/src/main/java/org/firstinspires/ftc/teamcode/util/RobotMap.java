@@ -75,9 +75,9 @@ public class RobotMap {
 
         timer = new ElapsedTime();
 
-        if(FtcDashboard.getInstance() != null)
-            telemetry = FtcDashboard.getInstance().getTelemetry();
-        else
+//        if(FtcDashboard.getInstance() != null)
+//            telemetry = FtcDashboard.getInstance().getTelemetry();
+//        else
             telemetry = t;
 
         g1 = gamepad1;

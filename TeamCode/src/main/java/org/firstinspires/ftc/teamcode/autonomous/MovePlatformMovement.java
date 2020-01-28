@@ -41,7 +41,12 @@ public class MovePlatformMovement {
         //Just try once more, we have the time for it.
         distanceToDriveToWall = getDistanceToMoveToWall();
         Robot.driveTrain.encoderDrive(driveSpeed/1.5, distanceToDriveToWall, distanceToDriveToWall, driveTimeOut);
+        grabPlatform(isRed);
 
+    }
+
+    public void grabPlatform(boolean isRed)
+    {
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
 
         Robot.driveTrain.encoderDrive(driveSpeed/2, -distanceBackupToPlatform, -distanceBackupToPlatform, driveTimeOut);

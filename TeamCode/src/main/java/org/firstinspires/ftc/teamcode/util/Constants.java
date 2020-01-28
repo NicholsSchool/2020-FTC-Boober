@@ -16,4 +16,7 @@ public class Constants {
 
     public static int ROBOT_START_POSITION = 1;
     public static int TEST_SKYSTONE_POSITION = 1;
+
+    //WORKING VALUES 0.006, 0, 0
+    public static double TURN_P = 0.009, TURN_I = 0, TURN_D = 0;
 }

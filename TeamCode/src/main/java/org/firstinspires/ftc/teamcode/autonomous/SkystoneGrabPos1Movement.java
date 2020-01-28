@@ -10,17 +10,23 @@ import org.firstinspires.ftc.teamcode.util.RobotMap;
 
 
 public class SkystoneGrabPos1Movement {
-    private double driveSpeed = 0.5, turnSpeed = 0.4,
+    private double driveSpeed = 1, turnSpeed = 0.4,
             leftTurn = 90, rightTurn = -leftTurn;
     private double driveTimeOut = 3, turnTimeOut = 2;
     private double skystoneLength = 8;
     private double distanceFromStone = 3.5, distanceAwayFromStone = 5;
     private double secondStoneDriveForward = 30;
+    private boolean park = true;
 
     Function clawDown = new Function() {
         public void execute(){Robot.claw.down();}
         public void stop(){Robot.claw.stop();}
     };
+
+    public void setPark(boolean park)
+    {
+        this.park = park;
+    }
 
     public void setDistanceAwayFromStone(double distance)
     {
@@ -29,7 +35,7 @@ public class SkystoneGrabPos1Movement {
 
     public void runMovement() throws InterruptedException {
 
-        Robot.driveTrain.setBrakeMode(false);
+        Robot.driveTrain.setBrakeMode(true);
         boolean isRed = Robot.colorPicker.isRed();
         int skyStonePosition = 0;
         while(!Robot.opMode.isStarted()) {
@@ -41,11 +47,14 @@ public class SkystoneGrabPos1Movement {
         long startTime = System.currentTimeMillis();
         run(Robot.colorPicker.isRed(), skyStonePosition);
         RobotMap.telemetry.addData("TIME TAKEN", (System.currentTimeMillis() - startTime)/1000);
+        Robot.driveTrain.printInfo();
         RobotMap.telemetry.update();
     }
 
     private void run(boolean isRed, int skyStonePos)
     {
+        if(skyStonePos == 1)
+            driveSpeed = 0.5;
         Robot.driveTrain.encoderDrive(driveSpeed,   -24, -24, 3);
 
         getStone(isRed, skyStonePos );
@@ -72,7 +81,8 @@ public class SkystoneGrabPos1Movement {
 
         //For third case, just park because we can't reach the end of the field.
         if(skystonePos > 0) {
-            Robot.driveTrain.encoderDrive(driveSpeed, 9, 9, driveTimeOut);
+            if(park)
+                Robot.driveTrain.encoderDrive(driveSpeed, 9, 9, driveTimeOut);
             return;
         }
 
@@ -114,8 +124,8 @@ public class SkystoneGrabPos1Movement {
         else
             Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut, clawDown);
 
-
-        Robot.driveTrain.encoderDrive(1.0, -(60 - distanceForFirstStone), -(60 - distanceForFirstStone), driveTimeOut);
+        double currentPosition = getDesiredDistanceFromWall(skystonePos, true);
+        Robot.driveTrain.encoderDrive(1.0, -(80 - currentPosition), -(80 - currentPosition), driveTimeOut);
     }
 
     private void getSecondStone(boolean isRed, int skystonePos)
@@ -142,7 +152,7 @@ public class SkystoneGrabPos1Movement {
         
     }
 
-    private double getDistanceFromWall(int skystonePos, boolean isFirst)
+    private double getDesiredDistanceFromWall(int skystonePos, boolean isFirst)
     {
         double turnGap = 4.5;
 
@@ -150,8 +160,13 @@ public class SkystoneGrabPos1Movement {
         if(!isFirst)
             numSkystones = 3;
 
+        return (numSkystones - skystonePos) * skystoneLength - turnGap;
+    }
 
-        double desiredDistanceFromWall = (numSkystones - skystonePos) * skystoneLength - turnGap;
+    private double getDistanceFromWall(int skystonePos, boolean isFirst)
+    {
+
+        double desiredDistanceFromWall =getDesiredDistanceFromWall(skystonePos, isFirst);
         double currentDistanceFromWall;
         pause(500);
         if(isFirst)

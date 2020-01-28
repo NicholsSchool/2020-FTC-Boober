@@ -22,6 +22,9 @@ public class DriveTrain extends Subsystem implements Recordable {
             COUNTS_PER_REV  = 515, INCHES_PER_REV = 4 * Math.PI, COUNTS_PER_INCH = COUNTS_PER_REV/INCHES_PER_REV;
     private DcMotorSimple[] motors;
     private boolean isArcadeDrive;
+
+    private double averageTurnTimeTest = 0;
+    private int numberOfTurnsTest = 0;
     /**
      * Constructs a new DriveTrain subsystem object
      * @param name - the name for the Subsystem
@@ -339,7 +342,9 @@ public class DriveTrain extends Subsystem implements Recordable {
                 negation = -1; // turn left
 
             RobotMap.timer.reset();
-            double p = 0.006, i = 0.0000, d= 0.000;
+
+
+            double p = Constants.TURN_P, i = Constants.TURN_I, d= Constants.TURN_D;
             double minSpeed = 0.3,
                     error = negation * (Robot.gyro.getHeading() - desiredHeading),
                     prevError = error,
@@ -358,8 +363,15 @@ public class DriveTrain extends Subsystem implements Recordable {
 
                 move(finalSpeed, -finalSpeed, false);
                 f.execute();
+                RobotMap.telemetry.addData("Turn P", p);
+                RobotMap.telemetry.addData("Turn I", i);
+                RobotMap.telemetry.addData("Turn D", d);
+                RobotMap.telemetry.addLine("\n");
+                RobotMap.telemetry.addData("Error", error);
+                RobotMap.telemetry.update();
             }
-
+            averageTurnTimeTest += RobotMap.timer.time();
+            numberOfTurnsTest ++;
             f.stop();
             stop();
         }
@@ -389,6 +401,11 @@ public class DriveTrain extends Subsystem implements Recordable {
             DcMotor m = (DcMotor) motors[i];
             RobotMap.telemetry.addData("Inches Encoder " + i, m.getCurrentPosition()/COUNTS_PER_INCH);
         }
+    }
+
+    public void printInfo()
+    {
+        RobotMap.telemetry.addData("Average Time Taken for turns: ", averageTurnTimeTest/numberOfTurnsTest);
     }
 
     /**

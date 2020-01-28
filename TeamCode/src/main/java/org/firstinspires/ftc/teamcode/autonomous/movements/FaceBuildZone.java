@@ -16,7 +16,7 @@ public class FaceBuildZone {
 
     public void run(boolean isRed)
     {
-        Robot.driveTrain.halfEncoderDrive(driveSpeed, 12, 12);
+        Robot.driveTrain.encoderDrive(driveSpeed, 12, 12, 3);
         RobotMap.telemetry.addLine("About to turn");
         RobotMap.telemetry.update();
         if(isRed)

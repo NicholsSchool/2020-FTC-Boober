@@ -68,12 +68,13 @@ public class SkystoneDetector {
         if( bitmap == null)
             return SkystonePosition.UNCERTAIN;
 
-        FtcDashboard.getInstance().sendImage(bitmap);
+        if(FtcDashboard.getInstance() != null)
+            FtcDashboard.getInstance().sendImage(bitmap);
         int stoneOneBlacks = 0, stoneTwoBlacks = 0;
         for(int i = 0; i < bitmap.getWidth(); i ++)
         {
             int pixel = bitmap.getPixel(i,  bitmap.getHeight()/2);
-            RobotMap.telemetry.addLine("Pixel " + i  + ": R - " + Color.red(pixel) + " G - " + Color.green(pixel) );
+//            RobotMap.telemetry.addLine("Pixel " + i  + ": R - " + Color.red(pixel) + " G - " + Color.green(pixel) );
             boolean isBlack = Color.red(pixel) < RED_THRESHOLD && Color.green(pixel) < GREEN_THRESHOLD;
             if(isBlack)
             {
