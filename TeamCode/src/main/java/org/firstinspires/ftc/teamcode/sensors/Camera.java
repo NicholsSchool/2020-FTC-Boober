@@ -103,7 +103,8 @@ public class Camera {
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        FtcDashboard.getInstance().startCameraStream(vuforia, 0);
+        if(FtcDashboard.getInstance() != null)
+            FtcDashboard.getInstance().startCameraStream(vuforia, 0);
     }
 
 }

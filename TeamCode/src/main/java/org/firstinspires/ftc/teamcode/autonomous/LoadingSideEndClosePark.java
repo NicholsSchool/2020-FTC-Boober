@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.autonomous.movements.MovePlatformMovement;
+import org.firstinspires.ftc.teamcode.autonomous.movements.ParkMovement;
 import org.firstinspires.ftc.teamcode.util.Robot;
 
-@Autonomous(name="Waffle Move END CLOSE", group="Build Side Autos")
-public class MovePlatformEndClose extends LinearOpMode {
-
+public class LoadingSideEndClosePark extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -16,9 +13,6 @@ public class MovePlatformEndClose extends LinearOpMode {
         Robot.driveTrain.setBrakeMode(false);
         boolean isRed = Robot.colorPicker.isRed();
         waitForStart();
-
-
-        new MovePlatformMovement().run(isRed);
-        Robot.driveTrain.encoderDrive(0.5,37, 37, 3);
+        new ParkMovement().runMovement(isRed,true, false );
     }
 }

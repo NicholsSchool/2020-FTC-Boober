@@ -13,6 +13,7 @@ public class SystemTest extends OpMode {
     @Override
     public void init() {
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
+        Robot.initCamera();
         Robot.driveTrain.setBrakeMode(true);
     }
     int skystonePos = 0;

@@ -1,20 +1,28 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.movements;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.autonomous.Function;
 import org.firstinspires.ftc.teamcode.util.Robot;
 
 
 public class MovePlatformMovement {
-    private double driveSpeed = 0.5, turnSpeed = 0.4,
+    private double driveSpeed = 1, turnSpeed = 0.4,
             leftTurn = 90, rightTurn = -leftTurn;
+
+    private double pullSpeed = 0.5;
     private double driveTimeOut = 3, turnTimeOut = 2;
 
-    double fastSide = 0.8, slowSide = 0.4;
+    private double fastSide = 0.8, slowSide = 0.4;
 
     private double desiredDistanceFromWall = 14, distanceBackupToPlatform = 6;
+
+    public void setDistanceBackupToPlatform(double distance)
+    {
+        distanceBackupToPlatform = distance;
+    }
 
     private Function clawDown = new Function() {
         public void execute(){Robot.claw.down();}
@@ -26,14 +34,20 @@ public class MovePlatformMovement {
         public void stop(){Robot.claw.stop();}
     };
 
+    private Function clawUpWeak = new Function() {
+        public void execute(){Robot.claw.move(0.2);}
+        public void stop(){Robot.claw.stop();}
+    };
+
 
     public void run(boolean isRed)
     {
+
         Robot.driveTrain.encoderDrive(driveSpeed, -23.5, -23.5, driveTimeOut);
         if(isRed)
-            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut);
+            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut, clawUpWeak);
         else
-            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut);
+            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut, clawUpWeak);
 
         double distanceToDriveToWall = getDistanceToMoveToWall();
         Robot.driveTrain.encoderDrive(driveSpeed/1.5, distanceToDriveToWall, distanceToDriveToWall, driveTimeOut);
@@ -41,6 +55,9 @@ public class MovePlatformMovement {
         //Just try once more, we have the time for it.
         distanceToDriveToWall = getDistanceToMoveToWall();
         Robot.driveTrain.encoderDrive(driveSpeed/1.5, distanceToDriveToWall, distanceToDriveToWall, driveTimeOut);
+
+        /************************************************************************/
+
         grabPlatform(isRed);
 
     }
@@ -49,18 +66,27 @@ public class MovePlatformMovement {
     {
         Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
 
-        Robot.driveTrain.encoderDrive(driveSpeed/2, -distanceBackupToPlatform, -distanceBackupToPlatform, driveTimeOut);
+        Robot.driveTrain.encoderDrive(pullSpeed, -distanceBackupToPlatform, -distanceBackupToPlatform, driveTimeOut);
+
+        /************************************************************************/
 
         Robot.claw.timedMove(false, 2);
-        Robot.driveTrain.encoderDrive(driveSpeed, 7, 7, driveTimeOut, clawDown);
+        Robot.driveTrain.encoderDrive(pullSpeed, 7, 7, driveTimeOut, clawDown);
 
         if(isRed)
             Robot.driveTrain.driveAndTurn(fastSide, slowSide, rightTurn, turnTimeOut, clawDownWeak);
         else
             Robot.driveTrain.driveAndTurn(slowSide, fastSide, leftTurn, turnTimeOut, clawDownWeak);
 
+        /************************************************************************/
+
         Robot.claw.timedMove(true, 1.5);
-        Robot.driveTrain.encoderDrive(driveSpeed, -5, -5, driveTimeOut);
+
+        double moveBack = 5;
+        if(Math.abs(Robot.gyro.getHeading()) > 60 )
+            moveBack = 10;
+
+        Robot.driveTrain.encoderDrive(pullSpeed, -moveBack, -moveBack, driveTimeOut);
 
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut );

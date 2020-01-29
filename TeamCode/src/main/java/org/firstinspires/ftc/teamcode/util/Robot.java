@@ -45,7 +45,7 @@ public class Robot {
         intake = new Intake("Intake");
         elevator = new Elevator("Elevator");
         claw = new Claw("Claw");
-        camera = new Camera();
+
         gyro = new Gyro();
         colorPicker = new ColorPicker();
         backDistanceSensor = new DistanceSensor(RobotMap.backDistanceSensor, "Back");
@@ -53,6 +53,7 @@ public class Robot {
         filePath = Environment.getExternalStorageDirectory().getPath();
         fileName = "SimpleBuildSide";
     }
+
 
     /**
      * Instantiates the RobotMap and all our Subsystem and Sensor classes used by the Robot, along
@@ -67,6 +68,11 @@ public class Robot {
     {
         init(hw, t, g1, g2);
         opMode = mode;
+    }
+
+    public static void initCamera()
+    {
+        camera = new Camera();
     }
 
     /**
