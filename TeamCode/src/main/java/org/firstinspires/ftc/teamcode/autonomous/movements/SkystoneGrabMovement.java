@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode.autonomous.movements;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.RobotLog;
-
 import org.firstinspires.ftc.teamcode.autonomous.Function;
+import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 
 
+/**
+ * A "Movement" is the general path the robot needs to take to accomplish the task.
+ * It has adjustable values so that certain starting, ending, and speeds can be configured
+ *
+ * This class handles grabbing and delivering a skystone.
+ */
 public class SkystoneGrabMovement {
     private double driveSpeed = 1, turnSpeed = 0.4,
             leftTurn = 90, rightTurn = -leftTurn;
@@ -71,7 +73,6 @@ public class SkystoneGrabMovement {
         long startTime = System.currentTimeMillis();
         run(Robot.colorPicker.isRed(), skyStonePosition);
         RobotMap.telemetry.addData("TIME TAKEN", (System.currentTimeMillis() - startTime)/1000);
-        Robot.driveTrain.printInfo();
         RobotMap.telemetry.update();
     }
 
@@ -88,6 +89,9 @@ public class SkystoneGrabMovement {
 
     private void getStone(boolean isRed, int skystonePos )
     {
+        if(isRed)
+            Constants.TURN_P = 0.006;
+
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut, clawUpWeak);
         else

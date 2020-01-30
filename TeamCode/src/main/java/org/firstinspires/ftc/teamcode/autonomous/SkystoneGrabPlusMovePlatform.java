@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.autonomous.movements.SkystoneGrabMovement;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 
-@Autonomous(name="Skystone + Platform", group="Loading Zone Autos")
+@Autonomous(name="Skystone + Platform", group="Special Auto")
 public class SkystoneGrabPlusMovePlatform extends LinearOpMode {
     private double driveSpeed = 1, turnSpeed = 0.4,
             leftTurn = 90, rightTurn = -leftTurn;

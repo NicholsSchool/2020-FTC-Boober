@@ -63,47 +63,46 @@ public class SkystoneDetector {
      */
     public SkystonePosition getSkystonePosition(boolean saveBitmaps, boolean red, RobotPosition position)
     {
-        RobotMap.telemetry.addLine("Running Scan");
-        Bitmap bitmap = getBitmap(saveBitmaps, red, position);
-        if( bitmap == null)
-            return SkystonePosition.UNCERTAIN;
+        if (Robot.opMode == null || Robot.opMode.opModeIsActive()) {
+            RobotMap.telemetry.addLine("Running Scan");
+            Bitmap bitmap = getBitmap(saveBitmaps, red, position);
+            if (bitmap == null)
+                return SkystonePosition.UNCERTAIN;
 
-        if(FtcDashboard.getInstance() != null)
-            FtcDashboard.getInstance().sendImage(bitmap);
-        int stoneOneBlacks = 0, stoneTwoBlacks = 0;
-        for(int i = 0; i < bitmap.getWidth(); i ++)
-        {
-            int pixel = bitmap.getPixel(i,  bitmap.getHeight()/2);
+            if (FtcDashboard.getInstance() != null)
+                FtcDashboard.getInstance().sendImage(bitmap);
+            int stoneOneBlacks = 0, stoneTwoBlacks = 0;
+            for (int i = 0; i < bitmap.getWidth(); i++) {
+                int pixel = bitmap.getPixel(i, bitmap.getHeight() / 2);
 //            RobotMap.telemetry.addLine("Pixel " + i  + ": R - " + Color.red(pixel) + " G - " + Color.green(pixel) );
-            boolean isBlack = Color.red(pixel) < RED_THRESHOLD && Color.green(pixel) < GREEN_THRESHOLD;
-            if(isBlack)
-            {
-                if(i <  bitmap.getWidth()/2)
-                    stoneOneBlacks ++;
-                else
-                    stoneTwoBlacks ++;
+                boolean isBlack = Color.red(pixel) < RED_THRESHOLD && Color.green(pixel) < GREEN_THRESHOLD;
+                if (isBlack) {
+                    if (i < bitmap.getWidth() / 2)
+                        stoneOneBlacks++;
+                    else
+                        stoneTwoBlacks++;
+                }
+
             }
 
-        }
+            RobotMap.telemetry.addData("Stone One Blacks: ", stoneOneBlacks);
+            RobotMap.telemetry.addData("Stone Two Blacks: ", stoneTwoBlacks);
 
-        RobotMap.telemetry.addData("Stone One Blacks: ", stoneOneBlacks);
-        RobotMap.telemetry.addData("Stone Two Blacks: ", stoneTwoBlacks);
-
-        if(stoneOneBlacks > BLACK_PIXEL_THRESHOLD) {
-            if (red)
-                return SkystonePosition.CENTER;
-            else
-                return SkystonePosition.NEAR;
+            if (stoneOneBlacks > BLACK_PIXEL_THRESHOLD) {
+                if (red)
+                    return SkystonePosition.CENTER;
+                else
+                    return SkystonePosition.NEAR;
+            }
+            if (stoneTwoBlacks > BLACK_PIXEL_THRESHOLD) {
+                if (red)
+                    return SkystonePosition.NEAR;
+                else
+                    return SkystonePosition.CENTER;
+            }
+                return SkystonePosition.FAR;
         }
-        if(stoneTwoBlacks > BLACK_PIXEL_THRESHOLD) {
-            if(red)
-                return SkystonePosition.NEAR;
-            else
-                return SkystonePosition.CENTER;
-        }
-        else
-            return SkystonePosition.FAR;
-
+        return SkystonePosition.UNCERTAIN;
     }
 
     /**

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.autonomous.movements.ParkMovement;
 import org.firstinspires.ftc.teamcode.util.Robot;
 
+@Autonomous(name="Loading Zone Park Close", group="Loading Zone Autos")
 public class LoadingSideEndClosePark extends LinearOpMode {
 
     @Override

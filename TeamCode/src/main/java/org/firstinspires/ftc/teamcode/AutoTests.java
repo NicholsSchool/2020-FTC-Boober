@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.autonomous.Function;
@@ -35,27 +36,31 @@ public class AutoTests extends LinearOpMode {
         waitForStart();
         RobotMap.telemetry.addLine("About to run Auto Tests");
         RobotMap.telemetry.update();
-        Robot.claw.timedMove(false, 2);
+//        Robot.claw.timedMove(false, 2);
     boolean isRed = Robot.colorPicker.isRed();
+
+    Robot.driveTrain.turnOnHeading(turnSpeed, 90, turnTimeOut);
+
+
 //        if(isRed)
 //            Robot.driveTrain.firmEncoderDrive(driveSpeed, 20, 5, 10, clawDown);
 //        else
 //            Robot.driveTrain.firmEncoderDrive(driveSpeed, 5, 20, 10, clawDown);
-
-        if(isRed)
-            Robot.driveTrain.driveAndTurn(fastSide, slowSide, rightTurn, turnTimeOut, clawDown);
-        else
-            Robot.driveTrain.driveAndTurn(slowSide, fastSide, leftTurn, turnTimeOut, clawDown);
-
-        Robot.claw.timedMove(true, 1.5);
-        Robot.driveTrain.encoderDrive(driveSpeed, -5, -5, driveTimeOut);
-
-        if(isRed)
-            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut );
-        else
-            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut );
-
-        Robot.driveTrain.encoderDrive(driveSpeed, 15, 15, driveTimeOut);
+//
+//        if(isRed)
+//            Robot.driveTrain.driveAndTurn(fastSide, slowSide, rightTurn, turnTimeOut, clawDown);
+//        else
+//            Robot.driveTrain.driveAndTurn(slowSide, fastSide, leftTurn, turnTimeOut, clawDown);
+//
+//        Robot.claw.timedMove(true, 1.5);
+//        Robot.driveTrain.encoderDrive(driveSpeed, -5, -5, driveTimeOut);
+//
+//        if(isRed)
+//            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut );
+//        else
+//            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut );
+//
+//        Robot.driveTrain.encoderDrive(driveSpeed, 15, 15, driveTimeOut);
 
 //        double turnGap = 3;
 ////        if(skystonePos == 2)

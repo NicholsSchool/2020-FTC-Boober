@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous.movements;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.teamcode.autonomous.Function;
 import org.firstinspires.ftc.teamcode.util.Robot;
 
-
+/**
+ * A "Movement" is the general path the robot needs to take to accomplish the task.
+ * It has adjustable values so that certain starting, ending, and speeds can be configured
+ *
+ * This class handles moving the platform.
+ */
 public class MovePlatformMovement {
     private double driveSpeed = 1, turnSpeed = 0.4,
             leftTurn = 90, rightTurn = -leftTurn;

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,10 +9,8 @@ import org.firstinspires.ftc.teamcode.autonomous.Function;
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
-import org.firstinspires.ftc.teamcode.util.pid.PIDController;
 import org.firstinspires.ftc.teamcode.util.record.Recordable;
 
-import java.util.function.Consumer;
 
 public class DriveTrain extends Subsystem implements Recordable {
 
@@ -23,8 +20,6 @@ public class DriveTrain extends Subsystem implements Recordable {
     private DcMotorSimple[] motors;
     private boolean isArcadeDrive;
 
-    private double averageTurnTimeTest = 0;
-    private int numberOfTurnsTest = 0;
     /**
      * Constructs a new DriveTrain subsystem object
      * @param name - the name for the Subsystem
@@ -96,7 +91,7 @@ public class DriveTrain extends Subsystem implements Recordable {
      * @param speed - the speed to drive at
      * @param leftInches - the number of inches for the left side to move
      * @param rightInches - the number of inches for the right side to move
-     * @param timeoutS - max seconds for the command to run
+     * @param timeoutS - max seconds for the method to run
      */
     public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS)
     {
@@ -106,6 +101,15 @@ public class DriveTrain extends Subsystem implements Recordable {
         });
     }
 
+    /**
+     * <u>Auto Method</u>
+     * Uses the built in PID encoder movements of the DcMotor class to drive to position
+     * @param speed - the speed to drive at
+     * @param leftInches - the number of inches for the left side to move
+     * @param rightInches - the number of inches for the right side to move
+     * @param timeoutS - max seconds for the method to run
+     * @param f - another robot functionality to run while this loop runs
+     */
     public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS, Function f)
     {
         int lmTarget, lbTarget, rmTarget, rbTarget;
@@ -224,6 +228,15 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
+    /**
+     * <u>Auto Method</u>
+     * Method tries to have the robot drive and turn at the same time, by running the sides at different speeds
+     * @param leftSpeed - the speed for the left side
+     * @param rightSpeed - the speed for the right side
+     * @param desiredHeading - the heading to finish turning at
+     * @param timeoutS - the max amount of time to run the loop
+     * @param f - another robot functionality to run while this loop runs
+     */
     public void driveAndTurn(double leftSpeed, double rightSpeed, double desiredHeading, double timeoutS, Function f)
     {
         if(Robot.opMode.opModeIsActive()) {
@@ -268,57 +281,13 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
-
     /**
      * <u>Auto Method</u>
-     * Turns Robot to given angle
+     * Turns Robot to a given heading using PID control
      * @param inputSpeed - the speed to turn
-     * @param desiredAngle - the target angle
+     * @param desiredHeading - the target heading
+     * @param timeoutS - the max amount of time to run method
      */
-    public void turn(double inputSpeed, double desiredAngle, double timeoutS)
-    {
-        System.out.println("ABOUT TO TURN");
-        if(Robot.opMode.opModeIsActive()) {
-            System.out.println("IN TURN CODE");
-            Robot.gyro.resetAngle();
-
-            double negation = 1; //turn right
-            if(desiredAngle > 0)
-                negation = -1; // turn left
-
-
-            RobotMap.timer.reset();
-            double p = 0.05, d = 0.0;
-            double minSpeed = 0.3, error = desiredAngle, prevError = error;
-            System.out.println("Going to " + desiredAngle);
-            while (Robot.opMode.opModeIsActive() &&  Math.abs(error) > 0.3 && (RobotMap.timer.time() < timeoutS)) {
-                double currentAngle = Robot.gyro.getAngle();
-                error = negation * (currentAngle - desiredAngle);
-
-                double newSpeed = p * error + d * (prevError - error);
-                double diffInRange = Math.abs(inputSpeed - minSpeed);
-                newSpeed = Range.clip(newSpeed, -1, 1 ) * diffInRange;
-
-                prevError = error;
-
-                double finalSpeed = negation * (newSpeed  + minSpeed * (newSpeed > 0 ? 1 : -1) ) ;
-
-                //   System.out.print(RobotMap.timer.milliseconds() + " " + currentAngle + " " + finalSpeed);
-                move(finalSpeed, -finalSpeed);
-                System.out.println("Error: " + error);
-
-                Robot.gyro.print();
-                RobotMap.telemetry.update();
-
-                Robot.gyro.testPrint();
-            }
-
-            stop();
-            resetEncoders();
-            System.out.println("\n\n\n");
-        }
-    }
-
     public void turnOnHeading(double inputSpeed, double desiredHeading, double timeoutS)
     {
         turnOnHeading(inputSpeed, desiredHeading, timeoutS, new Function() {
@@ -333,6 +302,14 @@ public class DriveTrain extends Subsystem implements Recordable {
         });
     }
 
+    /**
+     * <u>Auto Method</u>
+     * Turns Robot to a given heading using PID control
+     * @param inputSpeed - the speed to turn
+     * @param desiredHeading - the target heading
+     * @param timeoutS - the max amount of time to run method
+     * @param f - another robot functionality to run while this loop runs
+     */
     public void turnOnHeading(double inputSpeed, double desiredHeading, double timeoutS, Function f)
     {
         if(Robot.opMode.opModeIsActive()) {
@@ -370,8 +347,6 @@ public class DriveTrain extends Subsystem implements Recordable {
                 RobotMap.telemetry.addData("Error", error);
                 RobotMap.telemetry.update();
             }
-            averageTurnTimeTest += RobotMap.timer.time();
-            numberOfTurnsTest ++;
             f.stop();
             stop();
         }
@@ -403,10 +378,6 @@ public class DriveTrain extends Subsystem implements Recordable {
         }
     }
 
-    public void printInfo()
-    {
-        RobotMap.telemetry.addData("Average Time Taken for turns: ", averageTurnTimeTest/numberOfTurnsTest);
-    }
 
     /**
      * Resets all encoders
