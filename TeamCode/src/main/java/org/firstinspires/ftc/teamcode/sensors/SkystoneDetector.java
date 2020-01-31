@@ -63,7 +63,7 @@ public class SkystoneDetector {
      */
     public SkystonePosition getSkystonePosition(boolean saveBitmaps, boolean red, RobotPosition position)
     {
-        if (Robot.opMode == null || Robot.opMode.opModeIsActive()) {
+        if (Robot.opMode == null || !Robot.opMode.isStopRequested()) {
             RobotMap.telemetry.addLine("Running Scan");
             Bitmap bitmap = getBitmap(saveBitmaps, red, position);
             if (bitmap == null)

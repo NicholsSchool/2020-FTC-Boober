@@ -106,7 +106,7 @@ public class SkystoneGrabMovement {
             else
                 Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut);
 
-            Robot.driveTrain.encoderDrive(driveSpeed, 9, 9, driveTimeOut);
+            Robot.driveTrain.encoderDrive(driveSpeed, 11, 11, driveTimeOut);
         }
 
 //        Robot.driveTrain.encoderDrive(0.8, secondStoneDriveForward, secondStoneDriveForward, driveTimeOut);

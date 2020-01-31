@@ -17,7 +17,7 @@ public class SkystoneGrabPlusMovePlatform extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Robot.init(hardwareMap,telemetry, gamepad1, gamepad2, this);
-
+        boolean isRed = Robot.colorPicker.isRed();
         RobotMap.telemetry.addLine("Robot Init complete");
         RobotMap.telemetry.update();
 
@@ -32,7 +32,11 @@ public class SkystoneGrabPlusMovePlatform extends LinearOpMode {
 
 
         MovePlatformMovement platformMovement = new MovePlatformMovement();
-        platformMovement.setDistanceBackupToPlatform(25);
+        if(isRed)
+            platformMovement.setDistanceBackupToPlatform(29);
+        else
+            platformMovement.setDistanceBackupToPlatform(25);
+        platformMovement.setRunGoBack(false);
         RobotMap.telemetry.addLine("Platform Movement setup complete");
         RobotMap.telemetry.update();
 

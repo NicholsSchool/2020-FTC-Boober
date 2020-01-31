@@ -16,9 +16,15 @@ public class MovePlatformMovement {
     private double pullSpeed = 0.5;
     private double driveTimeOut = 3, turnTimeOut = 2;
 
+    private boolean runGoBack = true;
     private double fastSide = 0.8, slowSide = 0.4;
 
     private double desiredDistanceFromWall = 14, distanceBackupToPlatform = 6;
+
+    public void setRunGoBack(boolean goBack)
+    {
+        runGoBack = goBack;
+    }
 
     public void setDistanceBackupToPlatform(double distance)
     {
@@ -87,7 +93,9 @@ public class MovePlatformMovement {
         if(Math.abs(Robot.gyro.getHeading()) > 60 )
             moveBack = 10;
 
-        Robot.driveTrain.encoderDrive(pullSpeed, -moveBack, -moveBack, driveTimeOut);
+        //Issue where the claw servo latches on to platform on red side. So we don't want to do this
+        if(!isRed && runGoBack)
+            Robot.driveTrain.encoderDrive(pullSpeed, -moveBack, -moveBack, driveTimeOut);
 
         if(isRed)
             Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut );

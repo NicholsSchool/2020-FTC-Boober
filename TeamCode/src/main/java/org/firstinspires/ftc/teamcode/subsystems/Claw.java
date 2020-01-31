@@ -64,6 +64,10 @@ public class Claw extends Subsystem implements Recordable {
             up();
         else if(RobotMap.g2.dpad_down)
             down();
+        else if(RobotMap.g1.right_trigger > 0.5)
+            up();
+        else if(RobotMap.g1.left_trigger > 0.5)
+            down();
         else
             stop();
     }
