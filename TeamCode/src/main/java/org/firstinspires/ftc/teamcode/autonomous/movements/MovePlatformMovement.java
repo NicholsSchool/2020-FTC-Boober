@@ -59,7 +59,7 @@ public class MovePlatformMovement {
         double distanceToDriveToWall = getDistanceToMoveToWall();
         Robot.driveTrain.encoderDrive(driveSpeed/1.5, distanceToDriveToWall, distanceToDriveToWall, driveTimeOut);
 
-        //Just try once more, we have the time for it.
+            //Just try once more, we have the time for it.
         distanceToDriveToWall = getDistanceToMoveToWall();
         Robot.driveTrain.encoderDrive(driveSpeed/1.5, distanceToDriveToWall, distanceToDriveToWall, driveTimeOut);
 

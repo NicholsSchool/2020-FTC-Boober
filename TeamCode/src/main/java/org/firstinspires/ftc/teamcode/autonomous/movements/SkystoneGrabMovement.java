@@ -184,7 +184,7 @@ public class SkystoneGrabMovement {
     {
         double turnGap = 4.5;
         if(skystonePos == 1)
-            turnGap += 1;
+            turnGap += 0.5;
 
         int numSkystones = 6;
         if(!isFirst)
