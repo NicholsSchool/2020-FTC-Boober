@@ -4,6 +4,9 @@ import org.firstinspires.ftc.teamcode.autonomous.Function;
 import org.firstinspires.ftc.teamcode.util.Constants;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
+import org.firstinspires.ftc.teamcode.util.record.RecordReader;
+
+import java.io.FileNotFoundException;
 
 
 /**
@@ -23,6 +26,8 @@ public class SkystoneGrabMovement {
     private double goBackDistance = 80;
     private double pullSpeed = driveSpeed/3;
 
+
+    private RecordReader reader;
 
     Function clawDown = new Function() {
         public void execute(){Robot.claw.down();}
@@ -64,6 +69,12 @@ public class SkystoneGrabMovement {
         Robot.driveTrain.setBrakeMode(true);
         boolean isRed = Robot.colorPicker.isRed();
         int skyStonePosition = 0;
+        try {
+            reader = new RecordReader(Robot.filePath, Robot.fileName);
+        } catch (FileNotFoundException e) {
+            RobotMap.telemetry.addData("Init File not found Error", e);
+            RobotMap.telemetry.update();
+        }
         while(!Robot.opMode.isStarted()) {
             skyStonePosition = Robot.camera.getSkystonePosition(isRed, 1);
             RobotMap.telemetry.addData("Skystone Position", skyStonePosition);
@@ -71,9 +82,48 @@ public class SkystoneGrabMovement {
         }
         Robot.opMode.waitForStart();
         long startTime = System.currentTimeMillis();
-        run(Robot.colorPicker.isRed(), skyStonePosition);
+        testRun(Robot.colorPicker.isRed(), skyStonePosition);
         RobotMap.telemetry.addData("TIME TAKEN", (System.currentTimeMillis() - startTime)/1000);
         RobotMap.telemetry.update();
+    }
+
+    private void testRun(boolean isRed, int skystonePos)
+    {
+        if(reader == null) {
+            run(isRed, skystonePos);
+            return;
+        }
+        while(Robot.opMode.opModeIsActive() && reader.isReading() )
+            reader.read();
+        Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut);
+
+        /************************************************************************/
+
+        pause(500);
+        double extraDistance = Robot.backDistanceSensor.get() - distanceFromStone;
+        Robot.driveTrain.encoderDrive(0.25, - extraDistance, -extraDistance, driveTimeOut);
+
+        if(doubleCheck) {
+            pause(500);
+            extraDistance = Robot.backDistanceSensor.get() - distanceFromStone;
+            Robot.driveTrain.encoderDrive(0.25, -extraDistance, -extraDistance, driveTimeOut);
+        }
+        /************************************************************************/
+
+        Robot.claw.timedMove(false, 1);
+
+        Robot.driveTrain.encoderDrive(pullSpeed, distanceAwayFromStone, distanceAwayFromStone, driveTimeOut, clawDown);
+
+        /************************************************************************/
+
+        if(isRed)
+            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut, clawDown);
+        else
+            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut, clawDown);
+
+        double currentPosition = getDesiredDistanceFromWall(skystonePos, true);
+        Robot.driveTrain.encoderDrive(1.0, -(goBackDistance - currentPosition), -(goBackDistance - currentPosition), driveTimeOut);
+
     }
 
     private void run(boolean isRed, int skyStonePos)
@@ -155,6 +205,7 @@ public class SkystoneGrabMovement {
         double currentPosition = getDesiredDistanceFromWall(skystonePos, true);
         Robot.driveTrain.encoderDrive(1.0, -(goBackDistance - currentPosition), -(goBackDistance - currentPosition), driveTimeOut);
     }
+
 
     private void getSecondStone(boolean isRed, int skystonePos)
     {

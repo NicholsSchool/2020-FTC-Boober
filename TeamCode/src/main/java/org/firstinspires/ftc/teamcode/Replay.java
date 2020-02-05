@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.record.RecordReader;
 
 import java.io.FileNotFoundException;
 
-@Disabled
+
 @TeleOp(name="Replay Test", group="Recording Tests")
 public class Replay extends OpMode {
 

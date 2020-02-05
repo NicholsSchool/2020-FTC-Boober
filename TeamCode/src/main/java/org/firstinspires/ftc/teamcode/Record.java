@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.record.RobotRecorder;
 
 import java.io.IOException;
 
-@Disabled
+
 @TeleOp(name="Teleop Record Test", group="Recording Tests")
 public class Record extends OpMode {
     private RobotRecorder recorder;
@@ -21,6 +21,7 @@ public class Record extends OpMode {
     @Override
     public void init() {
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
+        Robot.driveTrain.setBrakeMode(true);
         isRecording = false;
         telemetry.addData("FilePath: ", Robot.filePath);
         try {
@@ -60,7 +61,7 @@ public class Record extends OpMode {
         {
             try {
                 recorder.record();
-                sleep(35); //This is needed so that the RecordReader can stay in tune with the recordings
+                sleep(25); //This is needed so that the RecordReader can stay in tune with the recordings
             } catch (IOException e) {
                 telemetry.addData("Recording IO error", e);
 
