@@ -38,9 +38,9 @@ import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kV;
  */
 @Config
 public abstract class RoadRunnerTankDriveBase extends TankDrive {
-    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(3, 0, 0.05);
     public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(6, 0, 0);
 
 
     public enum Mode {
@@ -68,7 +68,8 @@ public abstract class RoadRunnerTankDriveBase extends TankDrive {
         super(kV, kA, kStatic, TRACK_WIDTH);
 
         dashboard = FtcDashboard.getInstance();
-        dashboard.setTelemetryTransmissionInterval(25);
+        if(dashboard != null)
+            dashboard.setTelemetryTransmissionInterval(25);
 
         clock = NanoClock.system();
 
@@ -197,7 +198,8 @@ public abstract class RoadRunnerTankDriveBase extends TankDrive {
             }
         }
 
-        dashboard.sendTelemetryPacket(packet);
+        if(dashboard != null)
+            dashboard.sendTelemetryPacket(packet);
     }
 
     public void waitForIdle() {

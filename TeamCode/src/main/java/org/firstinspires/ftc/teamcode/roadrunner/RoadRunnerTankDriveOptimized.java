@@ -34,11 +34,16 @@ public class RoadRunnerTankDriveOptimized extends RoadRunnerTankDriveBase {
     private List<DcMotorEx> motors, leftMotors, rightMotors;
     private BNO055IMU imu;
 
-    public RoadRunnerTankDriveOptimized() {
+    public RoadRunnerTankDriveOptimized(HardwareMap hardwareMap) {
         super();
 
 
-        imu = RobotMap.imu;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
+
+        BNO055IMUUtil.remapAxes(imu, AxesOrder.ZYX, AxesSigns.NPN);
 
         motors = Arrays.asList(RobotMap.lmDrive, RobotMap.lbDrive, RobotMap.rmDrive, RobotMap.rbDrive);
         leftMotors = Arrays.asList(RobotMap.lmDrive, RobotMap.lbDrive);
@@ -119,6 +124,17 @@ public class RoadRunnerTankDriveOptimized extends RoadRunnerTankDriveBase {
 
     @Override
     public double getRawExternalHeading() {
-        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        return imu.getAngularOrientation().firstAngle;
+    }
+
+    public void stop()
+    {
+        for (DcMotorEx leftMotor : leftMotors) {
+            leftMotor.setPower(0);
+        }
+
+        for (DcMotorEx rightMotor : rightMotors) {
+            rightMotor.setPower(0);
+        }
     }
 }

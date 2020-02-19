@@ -10,6 +10,6 @@ public class CustomTrajectoryLoader {
 
     public static Trajectory load(String name) throws IOException
     {
-        return TrajectoryLoader.load(new File("TeamCode/src/main/assets/trajectory/" + name + ".yaml"));
+        return TrajectoryLoader.load(new File("TeamCode/src/main/assets/trajectory/Test 2.yaml"));
     }
 }
