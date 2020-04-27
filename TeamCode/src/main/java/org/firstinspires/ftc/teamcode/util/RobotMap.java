@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -16,13 +18,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.List;
+
 /**
  * This class houses all motors and sensors used by the object. This class exists so that we can avoid
  * having to use the same code repeatedly in each of our OpModes. Also, if a change is needed to the instantiate
  * of a variable, the singular change done in this class will be applied to all our OpModes.
  */
 public class RobotMap {
-    public static DcMotor lmDrive, lbDrive, rmDrive, rbDrive;
+    public static DcMotorEx lmDrive, lbDrive, rmDrive, rbDrive;
     public static DcMotorSimple lfDrive, rfDrive;
     public static DcMotorSimple lGripper, rGripper;
     public static CRServo elevator;
@@ -34,7 +38,7 @@ public class RobotMap {
     public static    BNO055IMU imu;
     public static Gamepad g1, g2;
     public static ElapsedTime timer;
-
+    private static List<LynxModule> allHubs;
 
     /**
      * This method will instantiate all motors and sensors used by the robot.
@@ -46,12 +50,12 @@ public class RobotMap {
     public static void init(HardwareMap hw, Telemetry t, Gamepad gamepad1, Gamepad gamepad2)
     {
         lfDrive = hw.get(DcMotorSimple.class, "LFDrive");
-        lmDrive = hw.get(DcMotorImplEx.class, "LMDrive");
-        lbDrive = hw.get(DcMotorImplEx.class, "LBDrive");
+        lmDrive = hw.get(DcMotorEx.class, "LMDrive");
+        lbDrive = hw.get(DcMotorEx.class, "LBDrive");
 
         rfDrive = hw.get(DcMotorSimple.class, "RFDrive");
-        rmDrive = hw.get(DcMotorImplEx.class, "RMDrive");
-        rbDrive = hw.get(DcMotorImplEx.class, "RBDrive");
+        rmDrive = hw.get(DcMotorEx.class, "RMDrive");
+        rbDrive = hw.get(DcMotorEx.class, "RBDrive");
 
         lGripper = hw.get(DcMotorSimple.class, "LGripper");
         rGripper = hw.get(DcMotorSimple.class, "RGripper");
@@ -74,6 +78,11 @@ public class RobotMap {
         imu.initialize(parameters);
 
         timer = new ElapsedTime();
+
+        allHubs = hw.getAll(LynxModule.class);
+        for (LynxModule module : allHubs) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
 //        if(FtcDashboard.getInstance() != null)
 //            telemetry = FtcDashboard.getInstance().getTelemetry();
@@ -99,5 +108,12 @@ public class RobotMap {
 
         claw.setDirection(DcMotorSimple.Direction.REVERSE);
 
+    }
+
+    public static void runEncoderBulkRead()
+    {
+        for (LynxModule module : allHubs) {
+            module.clearBulkCache();
+        }
     }
 }

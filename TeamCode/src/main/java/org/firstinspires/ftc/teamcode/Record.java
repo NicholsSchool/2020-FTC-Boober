@@ -24,7 +24,7 @@ public class Record extends OpMode {
         isRecording = false;
         telemetry.addData("FilePath: ", Robot.filePath);
         try {
-            recorder = new RobotRecorder(Robot.filePath, Robot.fileName);
+            recorder = new RobotRecorder(Robot.filePath, Robot.replayFileName);
         }
         catch(IOException e) {
             telemetry.addData("Init IO error", e);
@@ -39,23 +39,23 @@ public class Record extends OpMode {
     @Override
     public void loop() {
         Robot.run();
-        //Click Dpad down to begin recording
+        //Click Dpad right to begin recording
         if (gamepad1.dpad_right)
             isRecording = true;
 
-        //Click Dpad up to stop recording
+        //Click Dpad left to stop recording
         if (gamepad1.dpad_left) {
             if(isRecording)
                 try {
                     recorder.stopRecording();
                 }
                 catch (IOException e) {
-                    telemetry.addData("Stoping record IO error", e);
+                    telemetry.addData("Stopping record IO error", e);
                 }
             isRecording = false;
         }
 
-        // Record if dpad down was clicked
+        // Record if dpad right was clicked
         if (isRecording)
         {
             try {
@@ -94,7 +94,7 @@ public class Record extends OpMode {
                 recorder.stopRecording();
             }
             catch (IOException e) {
-                telemetry.addData("Stoping record IO error", e);
+                telemetry.addData("Stopping record IO error", e);
                 telemetry.update();
             }
         }

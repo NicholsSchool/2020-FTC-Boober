@@ -39,60 +39,8 @@ public class AutoTests extends LinearOpMode {
 //        Robot.claw.timedMove(false, 2);
     boolean isRed = Robot.colorPicker.isRed();
 
-    Robot.driveTrain.turnOnHeading(turnSpeed, 90, turnTimeOut);
+        Robot.claw.timedMove(true, 1);
 
-
-//        if(isRed)
-//            Robot.driveTrain.firmEncoderDrive(driveSpeed, 20, 5, 10, clawDown);
-//        else
-//            Robot.driveTrain.firmEncoderDrive(driveSpeed, 5, 20, 10, clawDown);
-//
-//        if(isRed)
-//            Robot.driveTrain.driveAndTurn(fastSide, slowSide, rightTurn, turnTimeOut, clawDown);
-//        else
-//            Robot.driveTrain.driveAndTurn(slowSide, fastSide, leftTurn, turnTimeOut, clawDown);
-//
-//        Robot.claw.timedMove(true, 1.5);
-//        Robot.driveTrain.encoderDrive(driveSpeed, -5, -5, driveTimeOut);
-//
-//        if(isRed)
-//            Robot.driveTrain.turnOnHeading(turnSpeed, rightTurn, turnTimeOut );
-//        else
-//            Robot.driveTrain.turnOnHeading(turnSpeed, leftTurn, turnTimeOut );
-//
-//        Robot.driveTrain.encoderDrive(driveSpeed, 15, 15, driveTimeOut);
-
-//        double turnGap = 3;
-////        if(skystonePos == 2)
-////            turnGap = 3.5;
-////
-////        double desiredDistanceFromWall = (6 - skystonePos) * skystoneLength - turnGap;
-////        double currentDistanceFromWall = Robot.backDistanceSensor.get();
-////
-////        double distanceToTravel = desiredDistanceFromWall - currentDistanceFromWall;
-////
-////
-////        Robot.driveTrain.encoderDrive(driveSpeed,distanceToTravel,distanceToTravel,3);
-////        Robot.driveTrain.turnOnHeading(turnSpeed, 90, turnTimeOut);
-////
-////        double extraDistance = Robot.backDistanceSensor.get() - distanceFromStone;
-////
-////        Robot.driveTrain.encoderDrive(driveSpeed, -extraDistance, -extraDistance, driveTimeOut);
-////        //claw down
-////        Robot.claw.timedMove(false, 1);
-////
-////        Robot.driveTrain.encoderDrive(driveSpeed, distanceAwayFromStone, distanceAwayFromStone, driveTimeOut);
-////        Robot.driveTrain.turnOnHeading(turnSpeed, 0, turnTimeOut, clawDown);
-////
-////        RobotMap.telemetry.addData("Distance from Wall As Detected", currentDistanceFromWall);
-////        RobotMap.telemetry.addData("The Desired Distance From Wall", desiredDistanceFromWall);
-////        RobotMap.telemetry.addData("The distance To be traveled", distanceToTravel);
-////        RobotMap.telemetry.update();
-
-     //   Robot.driveTrain.encoderDrive(0.5, 24, 24, 3);
-//       Robot.driveTrain.turnOnHeading(turnSpeed,90,2);
-//        pause(3000);
-//        Robot.driveTrain.turnOnHeading(turnSpeed,0,2);
     }
     public void pause(long milliseconds)
     {
