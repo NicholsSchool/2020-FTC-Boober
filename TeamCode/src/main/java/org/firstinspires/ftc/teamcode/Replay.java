@@ -23,7 +23,7 @@ public class Replay extends OpMode {
         Robot.init(hardwareMap, telemetry, gamepad1, gamepad2);
 
         try {
-            reader = new RecordReader(Robot.filePath, Robot.fileName);
+            reader = new RecordReader(Robot.filePath, Robot.replayFileName);
         } catch (FileNotFoundException e) {
             telemetry.addData("Init File not found Error", e);
             telemetry.update();

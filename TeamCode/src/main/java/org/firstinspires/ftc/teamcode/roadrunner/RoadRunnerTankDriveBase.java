@@ -31,6 +31,8 @@ import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.TRACK_WID
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.roadrunner.DriveConstants.kV;
+import org.firstinspires.ftc.teamcode.autonomous.Function;
+import org.firstinspires.ftc.teamcode.util.RobotMap;
 
 /*
  * Base class with shared functionality for sample tank drives. All hardware-specific details are
@@ -64,6 +66,20 @@ public abstract class RoadRunnerTankDriveBase extends TankDrive {
     private List<Double> lastWheelPositions;
     private double lastTimestamp;
 
+    private Function function;
+
+    private Function emptyFunction = new Function() {
+        @Override
+        public void execute() {
+            RobotMap.telemetry.addLine("Running Empty Function");
+            RobotMap.telemetry.update();
+        }
+
+        @Override
+        public void stop() {
+        }
+    };
+
     public RoadRunnerTankDriveBase() {
         super(kV, kA, kStatic, TRACK_WIDTH);
 
@@ -80,6 +96,7 @@ public abstract class RoadRunnerTankDriveBase extends TankDrive {
 
         constraints = new TankConstraints(BASE_CONSTRAINTS, TRACK_WIDTH);
         follower = new TankPIDVAFollower(AXIAL_PID, CROSS_TRACK_PID);
+        function = emptyFunction;
     }
 
     public TrajectoryBuilder trajectoryBuilder() {
@@ -104,14 +121,21 @@ public abstract class RoadRunnerTankDriveBase extends TankDrive {
         waitForIdle();
     }
 
-    public void followTrajectory(Trajectory trajectory) {
+    private void followTrajectory(Trajectory trajectory) {
         follower.followTrajectory(trajectory);
         mode = Mode.FOLLOW_TRAJECTORY;
     }
 
     public void followTrajectorySync(Trajectory trajectory) {
+        followTrajectorySync(trajectory, emptyFunction);
+    }
+
+    public void followTrajectorySync(Trajectory trajectory, Function function)
+    {
         followTrajectory(trajectory);
+        this.function = function;
         waitForIdle();
+
     }
 
     public Pose2d getLastError() {
@@ -188,9 +212,10 @@ public abstract class RoadRunnerTankDriveBase extends TankDrive {
 
                 fieldOverlay.setStroke("#3F51B5");
                 fieldOverlay.fillCircle(currentPose.getX(), currentPose.getY(), 3);
-
+                function.execute();
                 if (!follower.isFollowing()) {
                     mode = Mode.IDLE;
+                    function.stop();
                     setDriveSignal(new DriveSignal());
                 }
 

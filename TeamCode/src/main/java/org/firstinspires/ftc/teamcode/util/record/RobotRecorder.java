@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util.record;
 
+import android.os.Environment;
+
 import org.firstinspires.ftc.teamcode.util.Robot;
 
 import java.io.File;
@@ -12,8 +14,8 @@ public class RobotRecorder {
     private long start;
     private boolean writerClosed;
 
-    public RobotRecorder(String filePath, String fileName) throws IOException {
-        writer = new FileWriter(new File(filePath, fileName));
+    public RobotRecorder(String fileName) throws IOException {
+        writer = new FileWriter(new File(Environment.getExternalStorageDirectory().getPath(), fileName));
         start = System.currentTimeMillis();
         writerClosed = false;
         startedWriting = false;

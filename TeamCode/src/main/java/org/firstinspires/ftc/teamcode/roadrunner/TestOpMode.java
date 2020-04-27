@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
+import org.firstinspires.ftc.teamcode.autonomous.Function;
 import org.firstinspires.ftc.teamcode.util.Robot;
 import org.firstinspires.ftc.teamcode.util.RobotMap;
 
@@ -21,67 +22,90 @@ import kotlin.Unit;
 public class TestOpMode extends LinearOpMode {
 
     private double distanceFromStone = 3.6;
+    private Function clawDown = new Function() {
+        public void execute(){Robot.claw.down();
+            RobotMap.telemetry.addLine("Running Claw Down Function");
+            RobotMap.telemetry.update();
+        }
+        public void stop(){Robot.claw.stop();}
+    };
+
+    private Pose2d startPose = new Pose2d(-40, 64, Math.toRadians(90));
+    private RoadRunnerTankDriveOptimized drive;
 
     @Override
     public void runOpMode() throws InterruptedException {
         Robot.init(hardwareMap,telemetry, gamepad1, gamepad2, this);
 
-        RoadRunnerTankDriveOptimized drive = new RoadRunnerTankDriveOptimized(hardwareMap);
+        drive = new RoadRunnerTankDriveOptimized(hardwareMap);
+        drive.setPoseEstimate(startPose);
 
-
-        drive.setPoseEstimate(new Pose2d(-40, 64, Math.toRadians(90)));
-        RobotMap.telemetry.setAutoClear(false);
-        RobotMap.telemetry.addLine("Waiting for start");
-        RobotMap.telemetry.update();
+        int skystonePos = 2;
         waitForStart();
 
         if (isStopRequested()) return;
 
-        RobotMap.telemetry.addLine("Starting");
+        getStoneOne(skystonePos);
+        Robot.claw.timedMove(true, 1.5);
+
+        if(skystonePos != 3)
+            getStoneTwo(skystonePos);
+
+        RobotMap.telemetry.addLine("Finished Path");
         RobotMap.telemetry.update();
 
+        pause(5000);
+
+    }
+
+
+    public void getStoneOne(int skystonePos)
+    {
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
-                .setReversed(true)
-                .splineTo(new Pose2d(-29, 34, Math.toRadians(90)))
-                .build()
+                        .setReversed(true)
+                        .splineTo(new Pose2d(-29 - (8 * (skystonePos - 1)), 34, Math.toRadians(90)))
+                        .build()
         );
 
 
         double extraDistance = getDesiredDistanceFromBlock(distanceFromStone);
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
-                .setReversed(extraDistance < 0)
-                .forward(extraDistance)
-                .build()
+                        .setReversed(extraDistance < 0)
+                        .forward(extraDistance)
+                        .build()
         );
 
 
         Robot.claw.timedMove(false, 1.5);
-        RobotMap.telemetry.addLine("Arm Down!");
-        RobotMap.telemetry.addLine(drive.getPoseEstimate().toString());
-        RobotMap.telemetry.update();
-        drive.followTrajectorySync(
-                 drive.trajectoryBuilder()
-                .setReversed(true)
-                .splineTo(new Pose2d(-10, 37, Math.toRadians(180)))
-                .splineTo(new Pose2d(18, 37, Math.toRadians(180)))
-                .build()
-        );
 
-        Robot.claw.timedMove(true, 1.5);
+        drive.followTrajectorySync(
+                drive.trajectoryBuilder()
+                        .setReversed(true)
+                        .splineTo(new Pose2d(-10, 37, Math.toRadians(180)))
+                        .splineTo(new Pose2d(18, 37, Math.toRadians(180)))
+                        .build(),
+                clawDown
+        );
+    }
+
+    public void getStoneTwo(int skystonePos)
+    {
+
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(false)
 
                         .splineTo(new Pose2d(-35, 42, Math.toRadians(180)))
-                        .splineTo(new Pose2d(-52, 38, Math.toRadians(90)))
+                        .splineTo(new Pose2d(-52  - (8 * (skystonePos - 1)) , 38, Math.toRadians(90)))
                         .build()
         );
+
         double turnError = Math.toRadians(90) - drive.getPoseEstimate().getHeading();
         drive.turnSync(turnError);
 
-        extraDistance = getDesiredDistanceFromBlock(distanceFromStone - 0.1);
+        double extraDistance = getDesiredDistanceFromBlock(distanceFromStone - 0.1);
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(extraDistance < 0)
@@ -90,27 +114,15 @@ public class TestOpMode extends LinearOpMode {
         );
 
         Robot.claw.timedMove(false, 1.5);
-        RobotMap.telemetry.addLine("Arm Down!");
         drive.followTrajectorySync(
                 drive.trajectoryBuilder()
                         .setReversed(false)
-                        .splineTo(new Pose2d(-52, 43, Math.toRadians(90)))
+                        .splineTo(new Pose2d(-58, 48, Math.toRadians(180)))
                         .setReversed(true)
-                        .splineTo(new Pose2d(-10, 37, Math.toRadians(180)))
+                        .splineTo(new Pose2d(-24, 48, Math.toRadians(180)))
                         .splineTo(new Pose2d(18, 37, Math.toRadians(180)))
-                        .build()
+                        .build(), clawDown
         );
-
-        RobotMap.telemetry.addLine(drive.getPoseEstimate().toString());
-        RobotMap.telemetry.update();
-
-        RobotMap.telemetry.addLine("Finished Path");
-        RobotMap.telemetry.update();
-
-        drive.updatePoseEstimate();
-
-        pause(5000);
-
     }
 
     public double getDesiredDistanceFromBlock(double distanceFromStone)

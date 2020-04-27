@@ -27,7 +27,7 @@ public class Robot {
     public static LinearOpMode opMode;
     public static ColorPicker colorPicker;
     public static String filePath;
-    public static String fileName;
+    public static String replayFileName;
 
     private static HashMap<String, Subsystem> subsystems;
 
@@ -51,7 +51,7 @@ public class Robot {
         backDistanceSensor = new DistanceSensor(RobotMap.backDistanceSensor, "Back");
         frontDistanceSensor = new DistanceSensor(RobotMap.frontDistanceSensor, "Front");
         filePath = Environment.getExternalStorageDirectory().getPath();
-        fileName = "SimpleBuildSide";
+        replayFileName = "SimpleBuildSide";
     }
 
 
