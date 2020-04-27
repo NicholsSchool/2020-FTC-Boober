@@ -13,16 +13,9 @@ public class RecordReader {
     private boolean reading;
     private boolean inTuneWithData;
     private boolean startedReading;
-    private String fullText;
 
     public RecordReader(String filePath, String fileName) throws FileNotFoundException {
         reader = new Scanner(new File(filePath, fileName));
-
-
-//        reader.useDelimiter("\\z");
-//        fullText = reader.next();
-//        reader = new Scanner(fullText);
-
 
         reader.useDelimiter(",|\\n");
         start = System.currentTimeMillis();
